@@ -1,8 +1,11 @@
 "use client";
+
 import Image from "next/image";
+
 import { usePathname, useRouter } from "next/navigation";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CiBellOn, CiFileOn, CiHome, CiLogout, CiShop } from "react-icons/ci";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { IoBackspaceOutline } from "react-icons/io5";
 import {
@@ -17,11 +20,13 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import toast from "react-hot-toast";
 import { TbBrandBlogger } from "react-icons/tb";
+import Link from "next/link";
 
 const Sidebar = () => {
   const router = useRouter();
   const { isOpen, setIsOpen, isHovered, setIsHovered } = useContext(MyContext);
   const pathname = usePathname();
+  const [dropdown, setDropdown] = useState("none");
 
   useEffect(() => {
     console.log(pathname);
@@ -59,50 +64,88 @@ const Sidebar = () => {
         <div className="flex flex-col gap-4 justify-center items-start">
           {[
             { label: "Dashboard", path: "/", icon: CiHome },
-            { label: "Vendors", path: "/vendors", icon: PiHandshakeLight },
-            { label: "Brands", path: "/brands", icon: PiHexagonLight },
+            {
+              label: "Vendors",
+              path: "/vendors",
+              icon: PiHandshakeLight,
+              children: [
+                { label: "Dashboard", path: "/vendors/dashboard" },
+                { label: "Home", path: "/vendors/home" },
+                { label: "Helpdesk", path: "/vendors/helpdesk" },
+              ],
+            },
+            {
+              label: "Brands",
+              path: "/brands",
+              icon: PiHexagonLight,
+              children: [
+                { label: "Dashboard", path: "/brands/dashboard" },
+                { label: "Home", path: "/brands/home" },
+                { label: "Helpdesk", path: "/brands/helpdesk" },
+              ],
+            },
             { label: "Campaigns", path: "/campaigns", icon: CiShop },
             { label: "QR Generation", path: "/qr-generation", icon: PiQrCode },
+
             {
-              label: "Vendor Helpdesk",
-              path: "/vendor-helpdesk",
+              label: "Users",
+              path: "/users",
               icon: PiQuestionLight,
-            },
-            {
-              label: "Brand Helpdesk",
-              path: "/brand-helpdesk",
-              icon: PiQuestionLight,
-            },
-            {
-              label: "User Helpdesk",
-              path: "/user-helpdesk",
-              icon: PiQuestionLight,
+              children: [
+                { label: "Dashboard", path: "/users/dashboard" },
+                { label: "Home", path: "/users/home" },
+                { label: "Helpdesk", path: "/users/helpdesk" },
+              ],
             },
             { label: "Admin", path: "/admins", icon: MdAdminPanelSettings },
             { label: "Blogs", path: "/blogs", icon: TbBrandBlogger },
             { label: "Profile", path: "/profile", icon: PiPersonSimpleCircle },
-          ].map(({ label, path, icon: Icon }) => (
-            <div
-              key={path}
-              onClick={() => router.push(path)}
-              className={`flex gap-4 justify-center items-center cursor-pointer relative ${
-                pathname === path ? "text-white" : ""
-              }`}
-            >
-              <Icon className="text-3xl" />
-              <p
-                className={`transition-all duration-1000 ease-out opacity-0 transform ${
-                  isHovered ? "opacity-100 scale-100" : "absolute scale-0 duration-0"
+          ].map(({ label, path, icon: Icon, children }) => (
+            <>
+              <div
+                key={path}
+                onClick={() =>
+                  ["/users", "/brands", "/vendors"].includes(path)
+                    ? setDropdown(path == dropdown ? "none" : path)
+                    : router.push(path)
+                }
+                className={`flex gap-4 justify-center items-center cursor-pointer relative ${
+                  pathname === path ? "text-white" : ""
                 }`}
               >
-                {label}
-              </p>
-              <div
-                className={`absolute w-1 h-12 bg-oohpoint-grey-100 -left-5 ${
-                  pathname === path ? "block" : "hidden"
-                }`}
-              ></div>
-            </div>
+                <Icon className="text-3xl" />
+                <p
+                  className={`transition-all duration-1000 ease-out opacity-0 transform ${
+                    isHovered
+                      ? "opacity-100 scale-100"
+                      : "absolute scale-0 duration-0"
+                  }`}
+                >
+                  {label}
+                </p>
+                <div
+                  className={`absolute w-1 h-12 bg-oohpoint-grey-100 -left-5 ${
+                    pathname === path ? "block" : "hidden"
+                  }`}
+                />
+                {isHovered && children && (
+                  <div>
+                    <IoIosArrowUp
+                      className={`text-xl transition-transform duration-300 ${
+                        path == dropdown && "rotate-180"
+                      }`}
+                    />
+                  </div>
+                )}
+              </div>
+              {isHovered && path == dropdown && children && (
+                <div className="ml-8 flex flex-col gap-1">
+                  {children.map(({ label, path }) => (
+                    <Link href={path}>{label}</Link>
+                  ))}
+                </div>
+              )}
+            </>
           ))}
 
           <div
