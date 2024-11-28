@@ -27,7 +27,7 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       {title && <div className="p-4 text-3xl">{title}</div>}
       <table className="table bg-white shadow rounded-lg w-full ">
         {/* Table Headings */}

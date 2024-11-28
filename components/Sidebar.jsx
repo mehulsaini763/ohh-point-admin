@@ -93,7 +93,7 @@ const Sidebar = () => {
               path: "/users",
               icon: PiQuestionLight,
               children: [
-                { label: "Dashboard", path: "/users/dashboard" },
+                // { label: "Dashboard", path: "/users/dashboard" },
                 { label: "Home", path: "/users/home" },
                 { label: "Helpdesk", path: "/users/helpdesk" },
               ],

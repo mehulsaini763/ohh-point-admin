@@ -4,12 +4,14 @@ import { storage } from "@/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import Modal from "../Modal";
 
-export default function CreateQr({ setActiveSection }) {
+export default function CreateQr() {
   const [title, setTitle] = useState(""); // New field for QR Code title
   const [link, setLink] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const { fetchQr } = useContext(MyContext);
 
   const inputClassName =
@@ -41,7 +43,7 @@ export default function CreateQr({ setActiveSection }) {
 
     setLoading(true);
     try {
-    //   const imageUrl = await uploadImageToFirebase(image);
+      //   const imageUrl = await uploadImageToFirebase(image);
 
       const payload = {
         title, // Include the title
@@ -60,10 +62,10 @@ export default function CreateQr({ setActiveSection }) {
 
       if (res.ok) {
         toast.success("QR Code generated successfully!");
+        fetchQr();
         setTitle("");
         setLink("");
-        fetchQr();
-        setActiveSection("home");
+        setOpen(false);
       } else {
         toast.error("Failed to create QR Code.");
         console.log(res);
@@ -77,12 +79,30 @@ export default function CreateQr({ setActiveSection }) {
   };
 
   return (
-    <div className="bg-white h-full overflow-y-scroll p-6 mt-8 rounded-lg w-full">
-      <h1 className="text-2xl font-bold text-center mb-5">Generate QR Code</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* <div className=" flex gap-8 w-full justify-center items-center"> */}
-        {/* Background Image */}
-        {/* <div className="mb-4 w-1/2">
+    <>
+      <button
+        className="bg-oohpoint-primary-2 text-white py-2 px-6 rounded-lg hover:bg-oohpoint-primary-3"
+        onClick={() => setOpen(true)}
+      >
+        Generate QR Code
+      </button>
+      <Modal
+        open={open}
+        close={() => {
+          setTitle("");
+          setLink("");
+          setOpen(false);
+          setOpen(false);
+        }}
+      >
+        <div className="bg-white overflow-y-auto p-6 rounded-lg h-96 aspect-[2/1]">
+          <h1 className="text-2xl font-bold text-center mb-5">
+            Generate QR Code
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* <div className=" flex gap-8 w-full justify-center items-center"> */}
+            {/* Background Image */}
+            {/* <div className="mb-4 w-1/2">
             <label className="block text-oohpoint-primary-2 text-lg">
               Background Image:
             </label>
@@ -103,40 +123,48 @@ export default function CreateQr({ setActiveSection }) {
               )}
             </div>
           </div> */}
-        {/* QR Code Title */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">
-            QR Code Title:
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className={inputClassName}
-            placeholder="Enter QR Code title"
-          />
+            {/* QR Code Title */}
+            <div className="mb-4">
+              <label className="block text-oohpoint-primary-2 text-lg">
+                QR Code Title:
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter QR Code title"
+              />
+            </div>
+            {/* </div> */}
+            {/* Link */}
+            <div className="mb-4">
+              <label className="block text-oohpoint-primary-2 text-lg">
+                Link:
+              </label>
+              <input
+                type="text"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter your link"
+              />
+            </div>
+            {/* Submit Button */}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className={buttonClassName}
+                disabled={loading}
+              >
+                {loading ? "Generating..." : "Generate QR Code"}
+              </button>
+            </div>
+          </form>
         </div>
-        {/* </div> */}
-        {/* Link */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Link:</label>
-          <input
-            type="text"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            required
-            className={inputClassName}
-            placeholder="Enter your link"
-          />
-        </div>
-        {/* Submit Button */}
-        <div className="flex justify-end">
-          <button type="submit" className={buttonClassName} disabled={loading}>
-            {loading ? "Generating..." : "Generate QR Code"}
-          </button>
-        </div>
-      </form>
-    </div>
+      </Modal>
+    </>
   );
 }
