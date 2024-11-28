@@ -21,6 +21,7 @@ import { auth } from "@/firebase";
 import toast from "react-hot-toast";
 import { TbBrandBlogger } from "react-icons/tb";
 import Link from "next/link";
+import { Dot } from "lucide-react";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -101,7 +102,7 @@ const Sidebar = () => {
             { label: "Blogs", path: "/blogs", icon: TbBrandBlogger },
             { label: "Profile", path: "/profile", icon: PiPersonSimpleCircle },
           ].map(({ label, path, icon: Icon, children }) => (
-            <>
+            <div>
               <div
                 key={path}
                 onClick={() =>
@@ -130,22 +131,37 @@ const Sidebar = () => {
                 />
                 {isHovered && children && (
                   <div>
-                    <IoIosArrowUp
-                      className={`text-xl transition-transform duration-300 ${
-                        path == dropdown && "rotate-180"
+                    <IoIosArrowDown
+                      className={`text-xl transition-transform duration-1000 ${
+                        path == dropdown && isHovered && "rotate-180"
                       }`}
                     />
                   </div>
                 )}
               </div>
-              {isHovered && path == dropdown && children && (
-                <div className="ml-8 flex flex-col gap-1">
-                  {children.map(({ label, path }) => (
-                    <Link href={path}>{label}</Link>
+              <div
+                className={`flex flex-col transition-all duration-1000 ease-out overflow-hidden ${
+                  path == dropdown && isHovered
+                    ? "h-24 scale-100"
+                    : "scale-0 h-0 w-0"
+                }`}
+              >
+                {children &&
+                  children.map(({ label, path }) => (
+                    <div className="flex items-center gap-4 mt-2 text-sm ml-1.5">
+                      <Dot color="white" className="shrink-0" />
+                      <Link
+                        href={path}
+                        className={`transition-transform duration-1000 ${
+                          isHovered ? "scale-100" : "scale-0"
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    </div>
                   ))}
-                </div>
-              )}
-            </>
+              </div>
+            </div>
           ))}
 
           <div

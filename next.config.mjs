@@ -1,7 +1,13 @@
 // next.config.mjs
 export default {
-    images: {
-      domains: ['letsenhance.io', 'firebasestorage.googleapis.com'],
-    },
-  };
-  
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
+};
