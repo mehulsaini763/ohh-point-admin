@@ -34,20 +34,22 @@ const MapLocation = ({ locations }) => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <GoogleMap
-      mapContainerStyle={{
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        borderRadius: 8,
-      }}
-      zoom={3}
-      center={center}
-    >
-      {heatmapData.length > 0 && (
-        <HeatmapLayerF data={heatmapData} options={heatmapOptions} />
-      )}
-    </GoogleMap>
+    <div className="md:col-span-2">
+      <GoogleMap
+        mapContainerStyle={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          borderRadius: 8,
+        }}
+        zoom={3}
+        center={center}
+      >
+        {heatmapData.length > 0 && (
+          <HeatmapLayerF data={heatmapData} options={heatmapOptions} />
+        )}
+      </GoogleMap>
+    </div>
   );
 };
 

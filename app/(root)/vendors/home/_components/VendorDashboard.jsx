@@ -8,7 +8,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Sec1 from "./Sec1";
 import { AiOutlineStock } from "react-icons/ai";
-import DynamicTable from "@/components/NewTable";
 import SimpleLineChart from "@/components/LineChart";
 
 const MapLocation = dynamic(() => import("@/components/MapLocation"), {
@@ -108,37 +107,6 @@ const VendorDashboard = ({ user, campaigns }) => {
     console.log(transformedData);
   }, [campaigns]);
 
-  const getStatus = (startDate, endDate) => {
-    const currentDate = new Date().setHours(0, 0, 0, 0); // Current date without time
-    const start = new Date(startDate.seconds * 1000).setHours(0, 0, 0, 0); // Start date
-    const end = new Date(endDate?.seconds * 1000).setHours(0, 0, 0, 0); // End date
-
-    if (currentDate < start) {
-      return "Upcoming"; // Before start date
-    } else if (currentDate > end) {
-      return "Closed"; // After end date
-    } else {
-      return "Active"; // Between start and end dates
-    }
-  };
-
-  const transformCampaignsData = (campaigns) => {
-    return campaigns.map((campaign) => ({
-      campaignName: campaign.campaignName || "N/A", // Campaign Name
-      id: campaign.campaignId || "N/A", // Campaign ID
-      impressions: campaign.ipAddress?.length || 0, // Assuming impressions are based on ipAddress
-      startDate:
-        new Date(campaign.startDate.seconds * 1000).toLocaleDateString() ||
-        "N/A", // Start Date
-      endDate:
-        new Date(campaign.endDate?.seconds * 1000).toLocaleDateString() ||
-        "N/A", // End Date
-      status: getStatus(campaign.startDate, campaign.endDate), // Status
-      budgetAllocated: `Rs. ${campaign.campaignBudget || 0}`, // Budget Allocated
-      qr: `https://user-ooh-point.vercel.app/campaign/${campaign.campaignId}-${user.vendorId}`, // QR Code
-    }));
-  };
-
   return (
     <>
       <GradientBarChart
@@ -167,12 +135,6 @@ const VendorDashboard = ({ user, campaigns }) => {
         Icon={PiHandshake}
       />
       <MapLocation locations={locations} />
-      <Sec1
-        p1="Total QR Code Scans"
-        c1={totalScans}
-        c2={uniqueScans}
-        p2="Unique QR Code Scans"
-      />
       <Sec1
         p1="CPA"
         c1={campaigns.length}

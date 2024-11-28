@@ -174,6 +174,8 @@ const MyProvider = ({ children }) => {
     }
   };
 
+  if (!user) return null;
+
   return (
     <MyContext.Provider
       value={{

@@ -124,7 +124,7 @@ const DynamicTable = ({
       </table>
       {/* Pagination */}
       {pagination && (
-        <div className="flex justify-end py-4 space-x-2">
+        <div className="flex justify-end p-4 space-x-2">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}

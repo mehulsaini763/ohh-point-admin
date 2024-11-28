@@ -2,8 +2,8 @@ import React from "react";
 
 const VendorsCard4 = ({ profile }) => {
   return (
-    <div className="bg-oohpoint-grey-100 rounded-lg p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+    <div className="bg-oohpoint-grey-100 rounded-lg p-4 md:col-span-2">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
         <span className="font-semibold">Business Name</span>
         <span>{profile.businessName}</span>
         <span className="font-semibold">Account Number</span>

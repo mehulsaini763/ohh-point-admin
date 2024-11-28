@@ -14,14 +14,14 @@ import {
 } from "recharts";
 
 const SimpleLineChart = ({ head, Icon, data, count }) => (
-  <div className="min-w-[18rem] w-[30%] bg-white rounded-lg flex flex-col justify-center items-center px-2">
+  <div className="min-w-[18rem] bg-white rounded-lg flex flex-col justify-center items-center px-2 md:col-span-2">
     <div className="px-5 pt-8 pb-4 flex justify-between items-start w-full">
       <div className="flex flex-col justify-start items-start gap-2">
         <h4 className="text-oohpoint-primary-2 font-medium">{head}</h4>
         <p className="text-oohpoint-primary-3 text-3xl font-bold">{count}</p>
       </div>
       {Icon ? (
-        <AiOutlineStock className="text-3xl text-green-500" />
+        <AiOutlineStock className="text-3xl text-blue-500" />
       ) : (
         <AiOutlineStock className="text-3xl text-red-500" />
       )}
@@ -47,7 +47,7 @@ const SimpleLineChart = ({ head, Icon, data, count }) => (
         <Line
           type="basis"
           dataKey="value"
-          stroke="url(#gradient)"
+          stroke="#3b82f6"
           strokeWidth={4}
           dot={false}
         />

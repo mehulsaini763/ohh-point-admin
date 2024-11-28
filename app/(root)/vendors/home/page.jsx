@@ -154,9 +154,6 @@ const Page = () => {
           <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">
             Vendors
           </h1>
-          {/* <p className=" text-oohpoint-tertiary-2">
-            All you need to know about campaigns!
-          </p> */}
         </div>
         <div className="flex items-center gap-4 md:justify-end justify-between">
           <input

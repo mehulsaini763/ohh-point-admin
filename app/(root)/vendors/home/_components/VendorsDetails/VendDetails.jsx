@@ -22,9 +22,9 @@ const VendDetails = ({ vendor }) => {
   }, [campaigns, vendor]);
 
   return (
-    <div className="bg-oohpoint-grey-200 p-8 overflow-y-auto rounded-lg grid md:grid-cols-3 gap-6 h-full">
+    <div className="bg-oohpoint-grey-200 p-8 overflow-y-auto rounded-lg grid md:grid-cols-4 gap-6 h-full">
       {/* Profile Section */}
-      <div className="col-span-3 w-full bg-white flex justify-between px-10 py-5 rounded-xl">
+      <div className="col-span-full w-full bg-white flex justify-between px-10 py-5 rounded-xl">
         <div>
           <h2 className="text-oohpoint-primary-1 text-3xl">
             Meet {vendor.ownerName}!
