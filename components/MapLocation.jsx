@@ -7,7 +7,10 @@ import {
 } from "@react-google-maps/api";
 
 const MapLocation = ({ locations }) => {
-  const mapStyles = { width: "100%", height: "100%" };
+  const mapStyles = {
+    height: "200px",
+    width: "100%",
+  };
   const center = { lat: 29.945, lng: 76.818 };
 
   const { isLoaded } = useJsApiLoader({
@@ -34,21 +37,14 @@ const MapLocation = ({ locations }) => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className="md:col-span-2">
-      <GoogleMap
-        mapContainerStyle={{
-          width: "100%",
-          height: "100%",
-          overflow: "hidden",
-          borderRadius: 8,
-        }}
-        zoom={3}
-        center={center}
-      >
-        {heatmapData.length > 0 && (
-          <HeatmapLayerF data={heatmapData} options={heatmapOptions} />
-        )}
-      </GoogleMap>
+    <div className="md:col-span-2 min-w-[12rem] bg-white rounded-lg flex max-lg:flex-col justify-center items-center px-2 lg:h-full py-2 max-h-[20.5rem] h-full">
+      <div className="w-full rounded-lg overflow-hidden">
+        <GoogleMap mapContainerStyle={mapStyles} zoom={3} center={center}>
+          {heatmapData.length > 0 && (
+            <HeatmapLayerF data={heatmapData} options={heatmapOptions} />
+          )}
+        </GoogleMap>
+      </div>
     </div>
   );
 };
