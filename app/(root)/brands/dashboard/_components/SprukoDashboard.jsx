@@ -1,16 +1,17 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import SprukoCard from "./_components/SprukoCard";
+import SprukoCard from "./SprukoCard";
 import { MdCampaign, MdOutlineCampaign } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { MyContext } from "@/context/MyContext";
-import SprukoMixChart from "./_components/SprukoMixChart";
+import SprukoPieChart from "./SprukoPieChart";
+import SprukoMixChart from "./SprukoMixChart";
 import dynamic from "next/dynamic";
-import DynamicTable from "@/components/NewTable";
-import SprukoPieChart from "./_components/SprukoPieChart";
+import DynamicTable from "../NewTable";
+import SprukoTable from "./SprukoTable";
 
-const MapLocation = dynamic(() => import("@/components/MapLocation"), {
+const MapLocation = dynamic(() => import("../MapLocation"), {
   ssr: false,
 });
 
@@ -64,7 +65,6 @@ const SprukoDashboard = () => {
     lineData: [],
     increase: 0,
   });
-  const [redemptions, setRedemtions] = useState(0);
 
   useEffect(() => {
     let totalScans = 0,
@@ -89,22 +89,10 @@ const SprukoDashboard = () => {
 
     const today = new Date();
 
-    let redeemed = 0;
-    vendors.forEach((vendor) => {
-      vendor?.coupons?.forEach((coupon) => coupon.isRedeemed && redeemed++);
-    });
-    setRedemtions(redeemed);
-
-    let activeCampaigns = 0;
-
     // Process campaigns
     campaigns.forEach((campaign) => {
       const createdAt = convertTimestampToDate(campaign.createdAt);
       const weekday = getWeekdayName(createdAt);
-
-      if (Date.now() < convertTimestampToDate(campaign.endDate)) {
-        activeCampaigns++;
-      }
 
       const scanCount = campaign.ipAddress ? campaign.ipAddress.length : 0;
       const uniqueScanCount = campaign.locationIp
@@ -182,7 +170,6 @@ const SprukoDashboard = () => {
       total: campaignCount,
       lineData: formatLineData(campaignsLineData),
       increase: todayCampaigns,
-      active: activeCampaigns,
     });
     setBudgetData({
       total: budget,
@@ -240,94 +227,100 @@ const SprukoDashboard = () => {
     }));
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6 w-full p-4 md:p-6">
-      <SprukoCard
-        title="Total Campaigns"
-        value={campaignsData.total}
-        increase={`+${campaignsData.increase}`}
-        color="text-green-500"
-        iconColor="text-purple-500"
-        Icon={MdCampaign}
-        bgColor="bg-purple-100"
-        lineData={campaignsData.lineData}
-        lineColor="purple"
-      />
-      <SprukoCard
-        title="Total Budget"
-        value={`Rs.${budgetData.total}`}
-        increase={`+${budgetData.increase}`}
-        color="text-green-500"
-        iconColor="text-blue-500"
-        Icon={AiOutlineStock}
-        bgColor="bg-blue-100"
-        lineData={budgetData.lineData}
-        lineColor="blue"
-      />
-      <SprukoCard
-        title="Total Users"
-        value={users.length}
-        increase={`+${totalUsersData.increase}`}
-        color="text-green-500"
-        iconColor="text-purple-500"
-        Icon={MdCampaign}
-        bgColor="bg-purple-100"
-        lineData={totalUsersData.lineData}
-        lineColor="purple"
-      />
-      <SprukoCard
-        title="Total Vendors"
-        value={vendors.length}
-        increase={`+${totalVendorsData.increase}`}
-        color="text-green-500"
-        iconColor="text-orange-500"
-        Icon={MdOutlineCampaign}
-        bgColor="bg-orange-100"
-        lineData={totalVendorsData.lineData}
-        lineColor="orange"
-      />
-      <SprukoPieChart
-        totalScans={totalScansData.total}
-        uniqueScans={uniqueScansData.total}
-      />
-      <SprukoMixChart campaign={campaigns} />
-      <SprukoCard
-        title="Total Brands"
-        value={brands.length}
-        increase={`+${totalBrandsData.increase}`}
-        color="text-green-500"
-        iconColor="text-green-500"
-        Icon={IoIosCheckmarkCircleOutline}
-        bgColor="bg-green-100"
-        lineData={totalBrandsData.lineData}
-        lineColor="green"
-      />
-      <SprukoCard
-        title="Active Campaigns"
-        value={campaignsData.active}
-        increase={`+${campaignsData.increase}`}
-        color="text-green-500"
-        iconColor="text-yellow-500"
-        Icon={MdOutlineCampaign}
-        bgColor="bg-yellow-100"
-        lineData={campaignsData.lineData}
-        lineColor="yellow"
-      />
-      <MapLocation locations={locations} />
-      <SprukoCard
-        title="Total Redemptions"
-        value={redemptions}
-        increase={`+${uniqueScansData.increase}`}
-        color="text-green-500"
-        iconColor="text-gray-500"
-        Icon={IoIosCheckmarkCircleOutline}
-        bgColor="bg-gray-100"
-        lineData={uniqueScansData.lineData}
-        lineColor="gray"
-      />
-      <div className="bg-white rounded-lg col-span-full">
-        <p className="p-4  border-b text-oohpoint-primary-2 text-xl">
-          Recent Campaigns
-        </p>
+    <div className="flex flex-col gap-6 p-6 h-full w-full">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <SprukoCard
+          title="Total Campaigns"
+          value={campaignsData.total}
+          increase={`+${campaignsData.increase}`}
+          color="text-green-500"
+          iconColor="text-purple-500"
+          Icon={MdCampaign}
+          bgColor="bg-purple-100"
+          lineData={campaignsData.lineData}
+          lineColor="purple"
+        />
+        <SprukoCard
+          title="Total Budget"
+          value={`Rs.${budgetData.total}`}
+          increase={`+${budgetData.increase}`}
+          color="text-green-500"
+          iconColor="text-blue-500"
+          Icon={AiOutlineStock}
+          bgColor="bg-blue-100"
+          lineData={budgetData.lineData}
+          lineColor="blue"
+        />
+        <SprukoCard
+          title="Total Users"
+          value={users.length}
+          increase={`+${totalUsersData.increase}`}
+          color="text-green-500"
+          iconColor="text-purple-500"
+          Icon={MdCampaign}
+          bgColor="bg-purple-100"
+          lineData={totalUsersData.lineData}
+          lineColor="purple"
+        />
+        <SprukoCard
+          title="Total Vendors"
+          value={vendors.length}
+          increase={`+${totalVendorsData.increase}`}
+          color="text-green-500"
+          iconColor="text-orange-500"
+          Icon={MdOutlineCampaign}
+          bgColor="bg-orange-100"
+          lineData={totalVendorsData.lineData}
+          lineColor="orange"
+        />
+        <SprukoCard
+          title="Total Brands"
+          value={brands.length}
+          increase={`+${totalBrandsData.increase}`}
+          color="text-green-500"
+          iconColor="text-green-500"
+          Icon={IoIosCheckmarkCircleOutline}
+          bgColor="bg-green-100"
+          lineData={totalBrandsData.lineData}
+          lineColor="green"
+        />
+      </div>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <SprukoMixChart campaign={campaigns} />
+        <div className="flex flex-col gap-6 h-full">
+          <MapLocation locations={locations} />
+          {/* <SprukoPieChart
+          totalScans={totalScansData.total}
+          uniqueScans={uniqueScansData.total}
+          /> */}
+          <div className="flex gap-6">
+            <SprukoCard
+              title="Total Scans"
+              value={totalScansData.total}
+              increase={`+${totalScansData.increase}`}
+              color="text-green-500"
+              iconColor="text-orange-500"
+              Icon={MdOutlineCampaign}
+              bgColor="bg-orange-100"
+              lineData={totalScansData.lineData}
+              lineColor="orange"
+            />
+            <SprukoCard
+              title="Unique Scans"
+              value={uniqueScansData.total}
+              increase={`+${uniqueScansData.increase}`}
+              color="text-green-500"
+              iconColor="text-green-500"
+              Icon={IoIosCheckmarkCircleOutline}
+              bgColor="bg-green-100"
+              lineData={uniqueScansData.lineData}
+              lineColor="green"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <p className="text-oohpoint-primary-2 text-2xl">Recent Campaigns</p>
         <DynamicTable
           headings={[
             "Campaign Name",
@@ -344,6 +337,8 @@ const SprukoDashboard = () => {
           pagination={false}
         />
       </div>
+      {/* <SprukoTable /> */}
+      <div className="p-0.5" />
     </div>
   );
 };
