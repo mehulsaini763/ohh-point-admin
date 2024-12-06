@@ -50,9 +50,10 @@ export default async function handler(req, res) {
       !campaignObjectives ||
       !reportingFrequency ||
       !redirectLink ||
-      !quizQuestions || // Ensure quiz questions are included
-      !advertisingVideo ||
-      !adCreative
+      !quizQuestions
+      //  || // Ensure quiz questions are included
+      // !advertisingVideo ||
+      // !adCreative
 
     ) {
       return res.status(400).json({

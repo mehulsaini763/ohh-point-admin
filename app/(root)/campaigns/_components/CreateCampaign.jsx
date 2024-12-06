@@ -8,11 +8,12 @@ import {
 } from "firebase/storage";
 import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation"; // For accessing query params
+
 import { Timestamp } from "firebase/firestore";
 import Modal from "@/components/Modal";
+import moment from "moment";
 
-const CreateCampaign = ({ isEdit, campaign }) => {
+const CreateCampaign = ({ campaign }) => {
   const [campaignName, setCampaignName] = useState("");
   const [moq, setMoq] = useState("");
   const [ta, setTa] = useState("");
@@ -41,7 +42,7 @@ const CreateCampaign = ({ isEdit, campaign }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { fetchCampaigns, setIsEditCampaign } = useContext(MyContext);
+  const { fetchCampaigns } = useContext(MyContext);
 
   const inputClassName =
     "mt-1 block w-full rounded-3xl py-1 px-4 bg-oohpoint-grey-200 font-light";
@@ -95,23 +96,6 @@ const CreateCampaign = ({ isEdit, campaign }) => {
     fetchClients();
   }, []);
 
-  const formatToFirestoreTimestamp = (date) => {
-    if (date && date.toDate) {
-      // If it's already a Firestore Timestamp, return it
-      return date;
-    } else if (date instanceof Date) {
-      // If it's a JavaScript Date, convert it to Firestore Timestamp
-      return Timestamp.fromDate(date);
-    } else if (typeof date === "string" || date instanceof String) {
-      // If it's a string, convert it to Date and then to Firestore Timestamp
-      const parsedDate = new Date(date);
-      return isNaN(parsedDate.getTime())
-        ? null
-        : Timestamp.fromDate(parsedDate);
-    }
-    return null; // Return null if date is invalid or not set
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -152,16 +136,12 @@ const CreateCampaign = ({ isEdit, campaign }) => {
       return;
     }
 
-    // Format dates for Firestore storage
-    const formattedStartDate = formatToFirestoreTimestamp(startDate);
-    const formattedEndDate = formatToFirestoreTimestamp(endDate);
-
     const campaignData = {
       campaignName,
       moq,
       targetAudience,
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
+      startDate,
+      endDate,
       geographicTargeting: geoTargets,
       qrCodeTags: qrTags,
       placementChannel,
@@ -176,45 +156,23 @@ const CreateCampaign = ({ isEdit, campaign }) => {
     };
 
     try {
-      let response;
-      if (isEdit) {
-        // Update existing campaign
-        response = await fetch(`/api/updateCampaign/`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ cid: campaign.cid, ...campaignData }),
-        });
-      } else {
-        // Create new campaign
-        response = await fetch("/api/createCampaign", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(campaignData),
-        });
-      }
+      // Create new campaign
+      await fetch("/api/createCampaign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(campaignData),
+      });
 
-      const result = await response.json();
-      if (response.ok) {
-        toast.success(
-          isEdit
-            ? "Campaign updated successfully"
-            : "Campaign created successfully"
-        );
-        // router.push("/campaigns");
-      } else {
-        toast.error(result.message || "Failed to save campaign");
-      }
+      toast.success("Campaign created successfully");
     } catch (error) {
       console.error("Error creating/updating campaign:", error);
       toast.error("An error occurred while saving the campaign.");
     } finally {
-      setLoading(false);
       fetchCampaigns();
-      setIsEditCampaign(false);
+      setLoading(false);
+      setOpen(false);
     }
   };
 
@@ -302,8 +260,10 @@ const CreateCampaign = ({ isEdit, campaign }) => {
             </label>
             <input
               type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              value={moment.unix(startDate.seconds).format("yyyy-MM-DD")}
+              onChange={(e) =>
+                setStartDate(Timestamp.fromDate(new Date(e.target.value)))
+              }
               className={inputClassName}
             />
           </div>
@@ -315,8 +275,10 @@ const CreateCampaign = ({ isEdit, campaign }) => {
             </label>
             <input
               type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              value={moment.unix(endDate.seconds).format("yyyy-MM-DD")}
+              onChange={(e) =>
+                setEndDate(Timestamp.fromDate(new Date(e.target.value)))
+              }
               className={inputClassName}
             />
           </div>
@@ -579,20 +541,13 @@ const CreateCampaign = ({ isEdit, campaign }) => {
               Add Question
             </button>
           </div>
-
           <div className="flex justify-end flex-col gap-3">
             <button
               className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
               disabled={loading}
               onClick={handleSubmit}
             >
-              {loading
-                ? isEdit
-                  ? "Updating..."
-                  : "Creating..."
-                : isEdit
-                ? "Update Campaign"
-                : "Create Campaign"}
+              {loading ? "Creating..." : "Create Campaign"}
             </button>
           </div>
         </div>
