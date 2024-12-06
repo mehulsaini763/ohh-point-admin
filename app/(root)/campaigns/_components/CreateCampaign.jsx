@@ -6,7 +6,7 @@ import {
   ref as storageRef,
   getDownloadURL,
 } from "firebase/storage";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { Timestamp } from "firebase/firestore";
@@ -40,9 +40,10 @@ const CreateCampaign = ({ campaign }) => {
       correctOption: null, // Index of the correct option
     },
   ]);
-  const [clients, setClients] = useState(brands);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  console.log(brands);
 
   const inputClassName =
     "mt-1 block w-full rounded-3xl py-1 px-4 bg-oohpoint-grey-200 font-light";
@@ -155,7 +156,7 @@ const CreateCampaign = ({ campaign }) => {
       console.error("Error creating/updating campaign:", error);
       toast.error("An error occurred while saving the campaign.");
     } finally {
-      fetchCampaigns();
+      await fetchCampaigns();
       setLoading(false);
       handleClose();
     }
@@ -187,7 +188,6 @@ const CreateCampaign = ({ campaign }) => {
         correctOption: null, // Index of the correct option
       },
     ]);
-    setClients([]);
     setOpen(false);
   };
 
@@ -400,7 +400,7 @@ const CreateCampaign = ({ campaign }) => {
             <option value="" disabled>
               Select a client
             </option>
-            {clients.map((cl) => (
+            {brands.map((cl) => (
               <option value={cl.brandId} key={cl.brandId}>
                 {cl.brandName} - {cl.brandId}
               </option>

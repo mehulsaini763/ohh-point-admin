@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import CreateCampaign from "./_components/CreateCampaign";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
@@ -16,6 +16,8 @@ import { Loader2, SortAsc, SortDesc } from "lucide-react";
 import EditCampaign from "./_components/EditCampaign";
 import CampaignDetails from "./_components/CampaignDetails";
 import DeleteModal from "./_components/DeleteModal";
+import { Popover } from "@mui/material";
+import PauseModal from "./_components/PauseModal";
 
 const Campaigns = () => {
   const { campaigns, fetchCampaigns } = useContext(MyContext);
@@ -110,22 +112,55 @@ const Campaigns = () => {
       header: <div className="text-right">status</div>,
       cell: ({ row }) => (
         <div className="flex justify-end">
-          {getStatus(row.getValue("startDate"), row.getValue("endDate"))}
+          {row.original?.isPaused ? (
+            <div className="text-sm uppercase py-1 px-2 bg-neutral-300 text-neutral-700 rounded-md w-fit font-semibold">
+              Paused
+            </div>
+          ) : (
+            getStatus(row.getValue("startDate"), row.getValue("endDate"))
+          )}
         </div>
       ),
     },
     {
       accessorKey: "actions",
       header: "",
-      cell: ({ row }) => (
-        <div className="flex flex-col gap-2 justify-center items-center">
-          <div className="flex gap-4">
-            <EditCampaign campaign={row.original} />
-            <DeleteModal campaign={row.original} />
+      cell: ({ row }) => {
+        const [open, setOpen] = useState(false);
+        return (
+          <div className="flex flex-col gap-2 justify-center items-center">
+            <CampaignDetails campaign={row.original} />
+            <div id={row.original.cid} className="relative">
+              <button
+                className="cursor-pointer bg-purple-700 text-white rounded-md px-3 py-1 my-auto"
+                onClick={(e) => setOpen(e.currentTarget)}
+              >
+                Actions
+              </button>
+              <Popover
+                id={row.original.cid}
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={open}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <div className="space-y-1 p-2">
+                  <EditCampaign campaign={row.original} />
+                  <PauseModal campaign={row.original} />
+                  <DeleteModal campaign={row.original} />
+                </div>
+              </Popover>
+            </div>
           </div>
-          <CampaignDetails campaign={row.original} />
-        </div>
-      ),
+        );
+      },
     },
   ];
 

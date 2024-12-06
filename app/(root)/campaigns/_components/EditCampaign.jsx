@@ -187,12 +187,12 @@ const EditCampaign = ({ campaign, refresh }) => {
       <div>
         <button
           type="button"
-          className={`cursor-pointer text-white bg-purple-700 rounded-md p-2 my-auto`}
+          className={`cursor-pointer text-white bg-purple-700 rounded-md py-1 px-3 flex gap-2 items-center my-auto w-full justify-center`}
           onClick={() => {
             setOpen(true);
           }}
         >
-          <Edit size={18} />
+          <Edit size={16} /> Edit
         </button>
       </div>
       <Modal
@@ -553,7 +553,7 @@ const EditCampaign = ({ campaign, refresh }) => {
             disabled={loading}
             onClick={handleSubmit}
           >
-            {loading ? "Updating..." : "Update Campaign"}{" "}
+            {loading ? "Updating..." : "Update Campaign"}
           </button>
         </div>
       </Modal>
