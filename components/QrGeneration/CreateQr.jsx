@@ -95,7 +95,7 @@ export default function CreateQr() {
           setOpen(false);
         }}
       >
-        <div className="bg-white overflow-y-auto p-6 rounded-lg h-96 aspect-[2/1]">
+        <div className="bg-white overflow-y-auto p-6 rounded-lg h-96 md:aspect-[2/1]">
           <h1 className="text-2xl font-bold text-center mb-5">
             Generate QR Code
           </h1>

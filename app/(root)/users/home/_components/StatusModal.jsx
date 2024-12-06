@@ -44,7 +44,7 @@ const StatusModal = ({ data, refresh }) => {
         </button>
       )}
       <Modal open={open} close={() => setOpen(false)}>
-        <div className="bg-white p-8 flex flex-col h-72 aspect-[2/1] rounded-md justify-between items-start">
+        <div className="bg-white p-8 flex flex-col h-72 md:aspect-[2/1] rounded-md justify-between items-start">
           <p className="text-xl font-semibold">Alert</p>
           <div className="w-full text-center">
             Are you sure want to{" "}

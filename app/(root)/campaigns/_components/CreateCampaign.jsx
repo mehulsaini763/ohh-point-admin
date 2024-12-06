@@ -206,14 +206,14 @@ const CreateCampaign = ({ campaign }) => {
       </div>
       <Modal
         className={
-          "w-full grid gap-8 grid-cols-4 p-4 pb-8 bg-white rounded-2xl overflow-y-auto md:p-8"
+          "w-full grid gap-4 md:gap-8 grid-cols-1 md:grid-cols-4 p-4 pb-8 bg-white rounded-2xl overflow-y-auto md:p-8"
         }
         open={open}
         close={handleClose}
       >
         {/* Campaign Name */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             Campaign Name
           </label>
           <input
@@ -226,8 +226,10 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* MOQ */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">MOQ</label>
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
+            MOQ
+          </label>
           <input
             className={inputClassName}
             type="number"
@@ -238,8 +240,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Target Audience */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             Target Audience
           </label>
           <input
@@ -255,25 +257,26 @@ const CreateCampaign = ({ campaign }) => {
               }
             }}
           />
-          <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
-            {targetAudience.length > 0 &&
-              targetAudience.map((ta, index) => (
-                <span
-                  className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
-                  key={index}
-                  onClick={() =>
-                    setTargetAudience(targetAudience.filter((tg) => tg !== ta))
-                  }
-                >
-                  {ta}
-                </span>
-              ))}
-          </div>
+        </div>
+
+        <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
+          {targetAudience.length > 0 &&
+            targetAudience.map((ta, index) => (
+              <span
+                className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
+                key={index}
+                onClick={() =>
+                  setTargetAudience(targetAudience.filter((tg) => tg !== ta))
+                }
+              >
+                {ta}
+              </span>
+            ))}
         </div>
 
         {/* Start Date */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             Start Date
           </label>
           <input
@@ -287,8 +290,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* End Date */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             End Date
           </label>
           <input
@@ -302,8 +305,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Geographic Targeting */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             Geographic Targeting
           </label>
           <input
@@ -336,8 +339,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* QR Code Tags */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:md:text-lg">
             QR Code Tags
           </label>
           <input
@@ -366,10 +369,9 @@ const CreateCampaign = ({ campaign }) => {
               ))}
           </div>
         </div>
-
         {/* Placement Channel Dropdown */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Placement Channel
           </label>
           <select
@@ -388,8 +390,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Client Dropdown */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Client
           </label>
           <select
@@ -409,8 +411,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Campaign Budget */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Campaign Budget
           </label>
           <input
@@ -423,8 +425,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Campaign Objective */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Campaign Objective
           </label>
           <input
@@ -437,8 +439,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Reporting Frequency */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Reporting Frequency
           </label>
           <input
@@ -451,8 +453,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Ad Creative Image */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Ad Creative Image
           </label>
           <input
@@ -464,8 +466,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Advertising Video */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Advertising Video
           </label>
           <input
@@ -477,8 +479,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* Redirect Link */}
-        <div className="">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div>
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Redirect Link
           </label>
           <input
@@ -491,8 +493,8 @@ const CreateCampaign = ({ campaign }) => {
         </div>
 
         {/* MCQ Quiz Questions */}
-        <div className="col-span-2">
-          <label className="block text-oohpoint-primary-2 text-lg">
+        <div className="col-span-full md:col-span-2">
+          <label className="block text-oohpoint-primary-2 md:text-lg">
             Quiz Questions
           </label>
           {quizQuestions.map((question, index) => (
@@ -559,7 +561,7 @@ const CreateCampaign = ({ campaign }) => {
             Add Question
           </button>
         </div>
-        <div className="flex justify-end flex-col gap-3">
+        <div className="mt-auto">
           <button
             className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
             disabled={loading}

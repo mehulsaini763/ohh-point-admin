@@ -3,6 +3,7 @@ import Table from "@/components/Table";
 import VendDetails from "./VendDetails";
 import DynamicTable from "@/components/NewTable";
 import { X } from "lucide-react";
+import Modal from "@/components/Modal";
 
 const VendorsDetails = ({ data }) => {
   const [open, setOpen] = useState(false); // to toggle between table and vendor details
@@ -15,18 +16,9 @@ const VendorsDetails = ({ data }) => {
       >
         Know More
       </button>
-      {open && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-hidden grid place-content-center z-10 p-8">
-          <button
-            className="absolute top-4 right-4 bg-white shadow-lg p-4 rounded-lg border"
-            onClick={() => setOpen(false)}
-          >
-            <X size={24} />
-          </button>
-
-          <VendDetails vendor={data} handleBack={() => setOpen(false)} />
-        </div>
-      )}
+      <Modal className={'overflow-y-auto'} open={open} close={() => setOpen(false)}>
+        <VendDetails vendor={data} handleBack={() => setOpen(false)} />
+      </Modal>
     </>
   );
 };

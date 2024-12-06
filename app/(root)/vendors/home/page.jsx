@@ -17,8 +17,7 @@ import CreateVendor from "./_components/CreateVendor";
 import CellActions from "./_components/CellActions";
 
 const Page = () => {
-  const { vendors, setVendors, campaigns } =
-    useContext(MyContext);
+  const { vendors, setVendors, campaigns } = useContext(MyContext);
   const [vendorsData, setVendorsData] = useState([]);
   const [campaignsAssigned, setCampaignsAssigned] = useState(0);
 
@@ -148,10 +147,10 @@ const Page = () => {
   });
 
   return (
-    <div className="bg-oohpoint-grey-200 flex flex-col p-6 gap-6 w-full">
-      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-6">
-        <div className="space-y-2">
-          <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">
+    <div className="bg-oohpoint-grey-200 flex flex-col p-4 gap-4 md:p-6 md:gap-6 w-full">
+      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-4 md:gap-6">
+        <div>
+          <h1 className="text-oohpoint-grey-500 font-bold text-4xl">
             Vendors
           </h1>
         </div>
@@ -159,7 +158,7 @@ const Page = () => {
           <input
             type="text"
             placeholder="Search by Name"
-            className="px-4 py-2 rounded-lg"
+            className="px-4 py-2 rounded-lg w-48"
             value={table.getColumn("ownerName")?.getFilterValue() ?? ""}
             onChange={(event) =>
               table.getColumn("ownerName")?.setFilterValue(event.target.value)

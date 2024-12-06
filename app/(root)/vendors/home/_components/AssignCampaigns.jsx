@@ -4,6 +4,7 @@ import DynamicTable from "@/components/NewTable";
 import toast from "react-hot-toast";
 import { MyContext } from "@/context/MyContext";
 import { X } from "lucide-react";
+import Modal from "@/components/Modal";
 
 const AssignCampaigns = ({ vendors, setVendors, campaigns }) => {
   const { fetchVendors } = useContext(MyContext);
@@ -183,199 +184,192 @@ const AssignCampaigns = ({ vendors, setVendors, campaigns }) => {
       >
         Assign
       </button>
-      {open && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-hidden grid place-content-center z-10 p-8">
-          <button
-            className="absolute top-4 right-4 bg-white shadow-lg p-4 rounded-lg border"
-            onClick={() => setOpen(false)}
+      <Modal
+        className={
+          "bg-white max-h-[90vh] overflow-y-scroll p-6 rounded-lg w-96"
+        }
+        open={open}
+        close={() => setOpen(false)}
+      >
+        <h2 className="text-xl text-center font-semibold mb-8">
+          Assign Campaign to Vendor
+        </h2>
+        <div className="mb-4">
+          <label className="block text-gray-800">Campaign</label>
+          <select
+            value={campaignId}
+            onChange={(e) => {
+              setCampaignId(e.target.value);
+              const data = campaigns.find((cp) => cp.cid === e.target.value);
+              setCampaign(data);
+              console.log(data);
+            }}
+            className="mt-1 block w-full bg-gray-50 rounded-md p-2"
           >
-            <X size={24} />
-          </button>
-
-          <div className="bg-white max-h-[90vh] overflow-y-scroll p-6 rounded-lg w-96">
-            <h2 className="text-xl text-center font-semibold mb-8">
-              Assign Campaign to Vendor
-            </h2>
-            <div className="mb-4">
-              <label className="block text-gray-800">Campaign</label>
-              <select
-                value={campaignId}
-                onChange={(e) => {
-                  setCampaignId(e.target.value);
-                  const data = campaigns.find(
-                    (cp) => cp.cid === e.target.value
-                  );
-                  setCampaign(data);
-                  console.log(data);
-                }}
-                className="mt-1 block w-full bg-gray-50 rounded-md p-2"
-              >
-                <option value="" disabled>
-                  Select A Campaign
+            <option value="" disabled>
+              Select A Campaign
+            </option>
+            {campaigns.map((cp) =>
+              !vendor?.campaigns?.find((v) => v.campaignId === cp.cid) ? (
+                <option key={cp.cid} value={cp.cid}>
+                  {cp.campaignName} - {cp.campaignId}
                 </option>
-                {campaigns.map((cp) =>
-                  !vendor?.campaigns?.find((v) => v.campaignId === cp.cid) ? (
-                    <option key={cp.cid} value={cp.cid}>
-                      {cp.campaignName} - {cp.campaignId}
-                    </option>
-                  ) : null
-                )}
-              </select>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">Price Per Scan:</label>
-              <input
-                type="number"
-                value={pricePerScan}
-                onChange={(e) => setPricePerScan(e.target.value)}
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                placeholder="Enter price per scan"
-              />
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">1st Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={firstPrize}
-                  onChange={(e) => setFirstPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 1st Prize"
-                />
-                <input
-                  type="number"
-                  value={firstPercent}
-                  onChange={(e) => setFirstPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 1st Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">2nd Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={secondPrize}
-                  onChange={(e) => setSecondPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 2nd Prize"
-                />
-                <input
-                  type="number"
-                  value={secondPercent}
-                  onChange={(e) => setSecondPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 2nd Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">3rd Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={thirdPrize}
-                  onChange={(e) => setThirdPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 3rd Prize"
-                />
-                <input
-                  type="number"
-                  value={thirdPercent}
-                  onChange={(e) => setThirdPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 3rd Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">4th Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={fourthPrize}
-                  onChange={(e) => setFourthPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 4th Prize"
-                />
-                <input
-                  type="number"
-                  value={fourthPercent}
-                  onChange={(e) => setFourthPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 4th Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">5th Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={fifthPrize}
-                  onChange={(e) => setFifthPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 5th Prize"
-                />
-                <input
-                  type="number"
-                  value={fifthPercent}
-                  onChange={(e) => setFifthPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 5th Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className=" mb-4">
-              <label className="block text-gray-800">6th Prize:</label>
-              <div>
-                <input
-                  type="text"
-                  value={sixthPrize}
-                  onChange={(e) => setSixthPrize(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 6th Prize"
-                />
-                <input
-                  type="number"
-                  value={sixthPercent}
-                  onChange={(e) => setSixthPercent(e.target.value)}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter 6th Prize winning Percentage"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end flex-col gap-3">
-              <button
-                onClick={assignCampaign}
-                className="bg-oohpoint-primary-2 text-white py-2 w-full rounded-lg"
-              >
-                Assign
-              </button>
-              <button
-                onClick={() => setAssignModal(false)}
-                className="border-gray-200 border text-gray-800 px-4 py-2 rounded-lg"
-              >
-                Close
-              </button>
-            </div>
+              ) : null
+            )}
+          </select>
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">Price Per Scan:</label>
+          <input
+            type="number"
+            value={pricePerScan}
+            onChange={(e) => setPricePerScan(e.target.value)}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            placeholder="Enter price per scan"
+          />
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">1st Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={firstPrize}
+              onChange={(e) => setFirstPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 1st Prize"
+            />
+            <input
+              type="number"
+              value={firstPercent}
+              onChange={(e) => setFirstPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 1st Prize winning Percentage"
+            />
           </div>
         </div>
-      )}
+        <div className=" mb-4">
+          <label className="block text-gray-800">2nd Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={secondPrize}
+              onChange={(e) => setSecondPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 2nd Prize"
+            />
+            <input
+              type="number"
+              value={secondPercent}
+              onChange={(e) => setSecondPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 2nd Prize winning Percentage"
+            />
+          </div>
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">3rd Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={thirdPrize}
+              onChange={(e) => setThirdPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 3rd Prize"
+            />
+            <input
+              type="number"
+              value={thirdPercent}
+              onChange={(e) => setThirdPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 3rd Prize winning Percentage"
+            />
+          </div>
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">4th Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={fourthPrize}
+              onChange={(e) => setFourthPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 4th Prize"
+            />
+            <input
+              type="number"
+              value={fourthPercent}
+              onChange={(e) => setFourthPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 4th Prize winning Percentage"
+            />
+          </div>
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">5th Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={fifthPrize}
+              onChange={(e) => setFifthPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 5th Prize"
+            />
+            <input
+              type="number"
+              value={fifthPercent}
+              onChange={(e) => setFifthPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 5th Prize winning Percentage"
+            />
+          </div>
+        </div>
+        <div className=" mb-4">
+          <label className="block text-gray-800">6th Prize:</label>
+          <div>
+            <input
+              type="text"
+              value={sixthPrize}
+              onChange={(e) => setSixthPrize(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 6th Prize"
+            />
+            <input
+              type="number"
+              value={sixthPercent}
+              onChange={(e) => setSixthPercent(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="Enter 6th Prize winning Percentage"
+            />
+          </div>
+        </div>
+        <div className="flex justify-end flex-col gap-3">
+          <button
+            onClick={assignCampaign}
+            className="bg-oohpoint-primary-2 text-white py-2 w-full rounded-lg"
+          >
+            Assign
+          </button>
+          <button
+            onClick={() => setAssignModal(false)}
+            className="border-gray-200 border text-gray-800 px-4 py-2 rounded-lg"
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

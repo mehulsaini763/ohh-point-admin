@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebase";
 import { MyContext } from "@/context/MyContext";
+import Modal from "../Modal";
 
 const CreateAdmin = () => {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ const CreateAdmin = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const { fetchAdmins } = useContext(MyContext);
+  const [open, setOpen] = useState(false);
 
   const inputClassName =
     "mt-1 block w-full rounded-3xl py-1 px-4 bg-oohpoint-grey-200 font-light";
@@ -73,102 +75,127 @@ const CreateAdmin = () => {
   };
 
   return (
-    <div className="bg-white h-full overflow-y-scroll p-6 rounded-lg w-full">
-      {error && <p className="text-red-500 text-center">{error}</p>}
-      {success && <p className="text-green-500 text-center">{success}</p>}
+    <>
+      <button
+        type="button"
+        className={`cursor-pointer bg-purple-700 text-white rounded-md px-4 py-2 my-auto`}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Add Admin
+      </button>
+      <Modal
+        className={"bg-white h-full overflow-y-scroll p-6 rounded-lg w-full"}
+        open={open}
+        close={() => setOpen(false)}
+      >
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {success && <p className="text-green-500 text-center">{success}</p>}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Name */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className={inputClassName}
-            placeholder="Enter admin's name"
-          />
-        </div>
-
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={inputClassName}
-            placeholder="Enter admin's email"
-          />
-        </div>
-
-        {/* Password */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Enter password"
-            className={inputClassName}
-          />
-        </div>
-
-        {/* Role */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Role:</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className={inputClassName}
-            required
-          >
-            <option value="" disabled>
-              Select a Role
-            </option>
-            <option value="admin">Admin</option>
-            <option value="content">Content</option>
-            <option value="helpdesk">Helpdesk</option>
-          </select>
-        </div>
-
-        {/* Profile Picture */}
-        <div className="mb-4">
-          <label className="block text-oohpoint-primary-2 text-lg">Profile Picture:</label>
-          <div className="flex gap-1 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Name */}
+          <div className="mb-4">
+            <label className="block text-oohpoint-primary-2 text-lg">
+              Name:
+            </label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProfilePicture(e.target.files[0])}
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               className={inputClassName}
+              placeholder="Enter admin's name"
             />
-            {profilePicture && (
-              <img
-                className="size-11 hover:scale-[5] hover:rounded-sm transition-all duration-300 mt-1 shadow-md rounded-lg"
-                src={URL.createObjectURL(profilePicture)}
-                alt="Profile Preview"
+          </div>
+
+          {/* Email */}
+          <div className="mb-4">
+            <label className="block text-oohpoint-primary-2 text-lg">
+              Email:
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={inputClassName}
+              placeholder="Enter admin's email"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="mb-4">
+            <label className="block text-oohpoint-primary-2 text-lg">
+              Password:
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter password"
+              className={inputClassName}
+            />
+          </div>
+
+          {/* Role */}
+          <div className="mb-4">
+            <label className="block text-oohpoint-primary-2 text-lg">
+              Role:
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className={inputClassName}
+              required
+            >
+              <option value="" disabled>
+                Select a Role
+              </option>
+              <option value="admin">Admin</option>
+              <option value="content">Content</option>
+              <option value="helpdesk">Helpdesk</option>
+            </select>
+          </div>
+
+          {/* Profile Picture */}
+          <div className="mb-4">
+            <label className="block text-oohpoint-primary-2 text-lg">
+              Profile Picture:
+            </label>
+            <div className="flex gap-1 items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProfilePicture(e.target.files[0])}
+                required
+                className={inputClassName}
               />
-            )}
+              {profilePicture && (
+                <img
+                  className="size-11 hover:scale-[5] hover:rounded-sm transition-all duration-300 mt-1 shadow-md rounded-lg"
+                  src={URL.createObjectURL(profilePicture)}
+                  alt="Profile Preview"
+                />
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end">
-        <button
-          onClick={handleCreateAdmin}
-          className={buttonClassName}
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Creating Admin..." : "Create Admin"}
-        </button>
-      </div>
-    </div>
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleCreateAdmin}
+            className={buttonClassName}
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Creating Admin..." : "Create Admin"}
+          </button>
+        </div>
+      </Modal>
+    </>
   );
 };
 

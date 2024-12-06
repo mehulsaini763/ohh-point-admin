@@ -14,30 +14,32 @@ const BrandDetails = ({ brand, campaigns }) => {
       >
         Know More
       </button>
-      <Modal open={open} close={() => setOpen(false)}>
-        <div className="p-8 bg-oohpoint-grey-200 rounded-lg h-full overflow-y-auto grid md:grid-cols-4 gap-6">
-          {/* Profile Section */}
-          <div className="w-full bg-white flex justify-between px-10 py-5 rounded-xl col-span-full">
-            <div>
-              <h2 className="text-oohpoint-primary-1 text-3xl">
-                Meet {brand.brandName}!
-              </h2>
-              <p>ID - {brand.brandId}</p>
-            </div>
-            <div>
-              <img
-                src={brand.imageUrl}
-                alt="brand"
-                className=" rounded-full h-16 w-16"
-              />
-            </div>
+      <Modal
+        className={
+          "p-4 md:p-8 bg-oohpoint-grey-200 rounded-lg h-full overflow-y-auto grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 overflow-hidden"
+        }
+        open={open}
+        close={() => setOpen(false)}
+      >
+        {/* Profile Section */}
+        <div className="w-full bg-white flex justify-between px-10 py-5 rounded-xl col-span-full row-span-1">
+          <div>
+            <h2 className="text-oohpoint-primary-1 text-3xl">
+              Meet {brand.brandName}!
+            </h2>
+            <p>ID - {brand.brandId}</p>
           </div>
-          <BrandCard brand={brand} />
-          <BrandCard2 brand={brand} campaigns={campaigns} />
-          <div className="col-span-full bg-white rounded-lg">
-            {campaigns && <BrandCard3 campaigns={campaigns} />}
+          <div>
+            <img
+              src={brand.imageUrl}
+              alt="brand"
+              className=" rounded-full h-16 w-16"
+            />
           </div>
         </div>
+        <BrandCard brand={brand} />
+        <BrandCard2 brand={brand} campaigns={campaigns} />
+        {campaigns && <BrandCard3 campaigns={campaigns} />}
       </Modal>
     </>
   );

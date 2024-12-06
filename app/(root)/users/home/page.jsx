@@ -1,11 +1,6 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import Card from "@/components/Card";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { MdOutlineCampaign } from "react-icons/md";
-import { PiHandshake } from "react-icons/pi";
-import UserTable from "./_components/StatusModal";
 import { MyContext } from "@/context/MyContext";
 import moment from "moment";
 import {
@@ -102,9 +97,9 @@ const page = () => {
   });
 
   return (
-    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-6 p-6">
-      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-6">
-        <div className="space-y-2">
+    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-4 md:gap-6">
+        <div>
           <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">Users</h1>
           <p className="text-oohpoint-tertiary-1">
             All you need to know about users!
@@ -117,9 +112,7 @@ const page = () => {
             className="px-4 py-2 rounded-lg"
             value={table.getColumn("name")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table
-                .getColumn("name")
-                ?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
           />
         </div>

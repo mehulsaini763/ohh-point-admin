@@ -201,7 +201,7 @@ const Campaigns = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-6">
         <button
           type="button"
           className="bg-white rounded-md px-4 py-2 border hover:bg-neutral-100"

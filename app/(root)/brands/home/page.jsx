@@ -15,7 +15,7 @@ import AddBrand from "./_components/AddBrand";
 import BrandDetails from "./_components/BrandDetails";
 
 const Brands = () => {
-  const { brands, fetchBrands, campaigns } = useContext(MyContext); 
+  const { brands, campaigns } = useContext(MyContext);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -65,7 +65,11 @@ const Brands = () => {
     {
       accessorKey: "actions",
       header: "",
-      cell: ({ row }) => <div className="flex justify-center items-center"><BrandDetails brand={row.original} campaigns={campaigns}/></div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center">
+          <BrandDetails brand={row.original} campaigns={campaigns} />
+        </div>
+      ),
     },
   ];
 
@@ -82,16 +86,16 @@ const Brands = () => {
   });
 
   return (
-    <div className="bg-oohpoint-grey-200 flex flex-col p-6 gap-6 w-full">
-      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-6">
-        <div className="space-y-2">
+    <div className="bg-oohpoint-grey-200 flex flex-col p-4 gap-4 md:p-6 md:gap-6 w-full">
+      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-4 md:gap-6">
+        <div>
           <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">Brands</h1>
         </div>
         <div className="flex items-center gap-4 md:justify-end justify-between">
           <input
             type="text"
             placeholder="Search by Name"
-            className="px-4 py-2 rounded-lg"
+            className="px-4 py-2 rounded-lg w-48"
             value={table.getColumn("ownerName")?.getFilterValue() ?? ""}
             onChange={(event) =>
               table.getColumn("ownerName")?.setFilterValue(event.target.value)

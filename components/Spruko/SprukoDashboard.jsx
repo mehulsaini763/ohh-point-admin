@@ -323,7 +323,7 @@ const SprukoDashboard = () => {
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6 p-4 md:p-6 w-full">
       <SprukoCard
         title="Total Campaigns"
         value={campaignsData.total}

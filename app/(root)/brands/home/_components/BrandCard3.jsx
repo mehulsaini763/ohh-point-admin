@@ -29,7 +29,7 @@ const BrandCard3 = ({ campaigns }) => {
   }));
 
   return (
-    <div className='w-full'>
+    <div className='w-full col-span-full'>
       <DynamicTable
         headings={[
           "Campaign Name", 

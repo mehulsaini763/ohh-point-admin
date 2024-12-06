@@ -91,7 +91,7 @@ const CampaignDetail = ({ campaign }) => {
       </div>
       <Modal
         className={
-          "w-full grid gap-8 grid-cols-4 bg-oohpoint-grey-200 rounded-lg overflow-y-auto p-8"
+          "w-full grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-4 bg-oohpoint-grey-200 rounded-lg overflow-y-auto p-2 md:p-6"
         }
         open={open}
         close={() => setOpen(false)}

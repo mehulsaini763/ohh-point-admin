@@ -94,10 +94,10 @@ const AddBrand = () => {
           {error && <p className="text-red-500 text-center">{error}</p>}
           {success && <p className="text-green-500 text-center">{success}</p>}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Name of POC */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Name of POC:
               </label>
               <input
@@ -111,8 +111,8 @@ const AddBrand = () => {
             </div>
 
             {/* Email */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Email:
               </label>
               <input
@@ -126,8 +126,8 @@ const AddBrand = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Password:
               </label>
               <input
@@ -141,8 +141,8 @@ const AddBrand = () => {
             </div>
 
             {/* Subscription */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Subscription
               </label>
               <select
@@ -161,8 +161,8 @@ const AddBrand = () => {
             </div>
 
             {/* Business Name */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Business Name:
               </label>
               <input
@@ -176,8 +176,8 @@ const AddBrand = () => {
             </div>
 
             {/* Brand Name */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Brand Name:
               </label>
               <input
@@ -191,8 +191,8 @@ const AddBrand = () => {
             </div>
 
             {/* Brand Logo */}
-            <div className="mb-4">
-              <label className="block text-oohpoint-primary-2 text-lg">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
                 Brand Logo:
               </label>
               <div className="flex gap-1 items-center">

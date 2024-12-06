@@ -75,7 +75,7 @@ const SignIn = () => {
 
           {/* Form Container */}
           <div className="bg-white h-screen w-full md:rounded-tl-[48px] flex justify-center items-center">
-            <div className="w-96">
+            <div className="w-96 p-8 md:p-0">
               <h3 className="font-bold text-3xl py-2">Sign In</h3>
               <p className="text-sm font-bold text-[#666666]">
                 Please fill in your unique admin login details below

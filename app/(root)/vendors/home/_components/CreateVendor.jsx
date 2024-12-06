@@ -5,6 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { MyContext } from "@/context/MyContext";
 import { storage } from "@/firebase";
 import { X } from "lucide-react";
+import Modal from "@/components/Modal";
 
 const CreateVendor = () => {
   const [businessName, setBusinessName] = useState("");
@@ -117,350 +118,335 @@ const CreateVendor = () => {
       >
         Create Vendor
       </button>
-      {open && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-hidden grid place-content-center z-10 p-8">
-          <button
-            className="absolute top-4 right-4 bg-white shadow-lg p-4 rounded-lg border"
-            onClick={() => setOpen(false)}
-          >
-            <X size={24} />
-          </button>
-          <div className="rounded-lg overflow-y-auto bg-white p-8">
-            <form onSubmit={handleSubmit} className=" pb-8">
-              <div className="grid grid-cols-4 gap-6 pb-8">
-                {/* Business Information */}
-                {/* <div className="col-span-4">
-              <h2 className="text-lg font-bold">Business Information</h2>
+      <Modal
+        className={"rounded-lg overflow-y-auto bg-white p-4 md:p-8"}
+        open={open}
+        close={() => setOpen(false)}
+      >
+        <form onSubmit={handleSubmit} className=" pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 pb-8">
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg ">
+                Business Name
+              </label>
+              <input
+                type="text"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter business name"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Owner's Name
+              </label>
+              <input
+                type="text"
+                value={ownerName}
+                onChange={(e) => setOwnerName(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter owner's name"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Business Category
+              </label>
+              <input
+                type="text"
+                value={businessCategory}
+                onChange={(e) => setBusinessCategory(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="e.g., Grocery, Medical"
+              />
+            </div>
+
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Phone Number
+              </label>
+              <input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter phone number"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter email address"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter password"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                WhatsApp (Optional)
+              </label>
+              <input
+                type="text"
+                value={whatsapp}
+                onChange={(e) => setWhatsapp(e.target.value)}
+                className={inputClassName}
+                placeholder="Enter WhatsApp number"
+              />
+            </div>
+            <div className="">
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Shop Image
+              </label>
+              <input
+                type="file"
+                onChange={handleImageChange}
+                required
+                className={inputClassName}
+              />
+            </div>
+
+            {/* Address Information */}
+            {/* <div className="">
+              <h2 className="md:text-lg font-bold">Address Information</h2>
             </div> */}
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg ">
-                    Business Name
-                  </label>
-                  <input
-                    type="text"
-                    value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter business name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Owner's Name
-                  </label>
-                  <input
-                    type="text"
-                    value={ownerName}
-                    onChange={(e) => setOwnerName(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter owner's name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Business Category
-                  </label>
-                  <input
-                    type="text"
-                    value={businessCategory}
-                    onChange={(e) => setBusinessCategory(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="e.g., Grocery, Medical"
-                  />
-                </div>
+            <div className="md:col-span-2">
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Full Address
+              </label>
+              <input
+                type="text"
+                value={fullAddress}
+                onChange={(e) => setFullAddress(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter full address"
+              />
+            </div>
 
-                {/* Contact Information */}
-                {/* <div className="col-span-4">
-              <h2 className="text-lg font-bold">Contact Information</h2>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Latitude
+              </label>
+              <input
+                type="text"
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter latitude"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Longitude
+              </label>
+              <input
+                type="text"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter longitude"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Google Map Link (Optional)
+              </label>
+              <input
+                type="text"
+                value={googleMapLink}
+                onChange={(e) => setGoogleMapLink(e.target.value)}
+                className={inputClassName}
+                placeholder="Enter Google map link"
+              />
+            </div>
+
+            {/* Additional Information */}
+            {/* <div className="">
+              <h2 className="md:text-lg font-bold">Additional Information</h2>
             </div> */}
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter phone number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter email address"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter password"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    WhatsApp (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Enter WhatsApp number"
-                  />
-                </div>
-                <div className="">
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Shop Image
-                  </label>
-                  <input
-                    type="file"
-                    onChange={handleImageChange}
-                    required
-                    className={inputClassName}
-                  />
-                </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Opening Hours
+              </label>
+              <input
+                type="time"
+                value={openingHours}
+                onChange={(e) => setOpeningHours(e.target.value)}
+                required
+                className={inputClassName}
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Closing Hours
+              </label>
+              <input
+                type="time"
+                value={closingHours}
+                onChange={(e) => setClosingHours(e.target.value)}
+                required
+                className={inputClassName}
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Operating Days
+              </label>
+              <input
+                type="text"
+                value={operatingDays}
+                onChange={(e) => setOperatingDays(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="e.g., Mon-Fri"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Aadhar/Pan/Voter ID Number
+              </label>
+              <input
+                type="text"
+                value={kycId}
+                onChange={(e) => setKycId(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter KYC ID"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                GST Number
+              </label>
+              <input
+                type="text"
+                value={gstNumber}
+                onChange={(e) => setGstNumber(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter GST number"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Bank Account Number
+              </label>
+              <input
+                type="text"
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter account number"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                IFSC Code
+              </label>
+              <input
+                type="text"
+                value={ifsc}
+                onChange={(e) => setIfsc(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter IFSC code"
+              />
+            </div>
+            <div>
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                UPI ID (Optional)
+              </label>
+              <input
+                type="text"
+                value={upiId}
+                onChange={(e) => setUpiId(e.target.value)}
+                className={inputClassName}
+                placeholder="Enter UPI ID"
+              />
+            </div>
 
-                {/* Address Information */}
-                {/* <div className="col-span-4">
-              <h2 className="text-lg font-bold">Address Information</h2>
-            </div> */}
-                <div className="col-span-2">
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Full Address
-                  </label>
-                  <input
-                    type="text"
-                    value={fullAddress}
-                    onChange={(e) => setFullAddress(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter full address"
-                  />
-                </div>
+            <div className="md:col-span-2">
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Registration Number (if applicable)
+              </label>
+              <input
+                type="text"
+                value={registrationNumber}
+                onChange={(e) => setRegistrationNumber(e.target.value)}
+                className={inputClassName}
+                placeholder="Enter Registration Number"
+              />
+            </div>
 
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Latitude
-                  </label>
-                  <input
-                    type="text"
-                    value={latitude}
-                    onChange={(e) => setLatitude(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter latitude"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Longitude
-                  </label>
-                  <input
-                    type="text"
-                    value={longitude}
-                    onChange={(e) => setLongitude(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter longitude"
-                  />
-                </div>
+            <div>
+              {/* <h2 className="md:text-lg font-bold">Services Offered</h2> */}
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-oohpoint-primary-2 md:text-lg">
+                Key Products/Services
+              </label>
+              <textarea
+                value={keyProducts}
+                onChange={(e) => setKeyProducts(e.target.value)}
+                required
+                className={inputClassName}
+                placeholder="Enter a brief list of products or services"
+              />
+            </div>
 
-                <div className="col-span-2">
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Google Map Link (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={googleMapLink}
-                    onChange={(e) => setGoogleMapLink(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Enter Google map link"
-                  />
-                </div>
-
-                {/* Additional Information */}
-                {/* <div className="col-span-4">
-              <h2 className="text-lg font-bold">Additional Information</h2>
-            </div> */}
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Opening Hours
-                  </label>
-                  <input
-                    type="time"
-                    value={openingHours}
-                    onChange={(e) => setOpeningHours(e.target.value)}
-                    required
-                    className={inputClassName}
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Closing Hours
-                  </label>
-                  <input
-                    type="time"
-                    value={closingHours}
-                    onChange={(e) => setClosingHours(e.target.value)}
-                    required
-                    className={inputClassName}
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Operating Days
-                  </label>
-                  <input
-                    type="text"
-                    value={operatingDays}
-                    onChange={(e) => setOperatingDays(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="e.g., Mon-Fri"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Aadhar/Pan/Voter ID Number
-                  </label>
-                  <input
-                    type="text"
-                    value={kycId}
-                    onChange={(e) => setKycId(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter KYC ID"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    GST Number
-                  </label>
-                  <input
-                    type="text"
-                    value={gstNumber}
-                    onChange={(e) => setGstNumber(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter GST number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Bank Account Number
-                  </label>
-                  <input
-                    type="text"
-                    value={accountNumber}
-                    onChange={(e) => setAccountNumber(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter account number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    IFSC Code
-                  </label>
-                  <input
-                    type="text"
-                    value={ifsc}
-                    onChange={(e) => setIfsc(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter IFSC code"
-                  />
-                </div>
-                <div>
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    UPI ID (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={upiId}
-                    onChange={(e) => setUpiId(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Enter UPI ID"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Registration Number (if applicable)
-                  </label>
-                  <input
-                    type="text"
-                    value={registrationNumber}
-                    onChange={(e) => setRegistrationNumber(e.target.value)}
-                    className={inputClassName}
-                    placeholder="Enter Registration Number"
-                  />
-                </div>
-
-                <div className="col-span-4">
-                  {/* <h2 className="text-lg font-bold">Services Offered</h2> */}
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-oohpoint-primary-2 text-lg">
-                    Key Products/Services
-                  </label>
-                  <textarea
-                    value={keyProducts}
-                    onChange={(e) => setKeyProducts(e.target.value)}
-                    required
-                    className={inputClassName}
-                    placeholder="Enter a brief list of products or services"
-                  />
-                </div>
-
-                {/* Terms Agreement */}
-                <div className="col-span-4 flex items-center">
-                  <input
-                    type="checkbox"
-                    id="termsAgreement"
-                    checked={termsAgreement}
-                    onChange={(e) => setTermsAgreement(e.target.checked)}
-                    required
-                  />
-                  <label
-                    htmlFor="termsAgreement"
-                    className="ml-2 text-oohpoint-primary-2"
-                  >
-                    I agree to the terms and conditions.
-                  </label>
-                </div>
-              </div>
-
-              <button
-                className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
-                type="submit"
-                disabled={loading}
+            {/* Terms Agreement */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="termsAgreement"
+                checked={termsAgreement}
+                onChange={(e) => setTermsAgreement(e.target.checked)}
+                required
+              />
+              <label
+                htmlFor="termsAgreement"
+                className="ml-2 text-oohpoint-primary-2"
               >
-                {loading ? "Loading..." : "Register"}
-              </button>
-            </form>
+                I agree to the terms and conditions.
+              </label>
+            </div>
           </div>
-        </div>
-      )}
+          <button
+            className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Register"}
+          </button>
+        </form>
+      </Modal>
     </>
   );
 };

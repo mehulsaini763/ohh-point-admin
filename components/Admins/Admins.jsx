@@ -1,87 +1,187 @@
 "use client";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { MyContext } from "@/context/MyContext";
-import AdminHome from "./AdminHome";
 import CreateAdmin from "./CreateAdmin";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import moment from "moment";
 
 const Admins = () => {
-  const [activeSection, setActiveSection] = useState("home");
-  const [searchtext, setSearchText] = useState("");
-  const {brands, setBrands, fetchBrands} = useContext(MyContext);
-  const renderSection = () => {
-    switch (activeSection) {
-      case "home":
-        return <AdminHome />;
-    //   case "vendorsDetails":
-    //     return <VendorsDetails />;
-    //   case "verificationAndApprovals":
-    //     return <VerificationAndAprrovals />;
-    //   case "Payments":
-    //     return <Payment />;
-      case "CreateAdmin":
-        return <CreateAdmin />;
-      default:
-        return <AdminHome />;
-    }
-  };
+  const { admins } = useContext(MyContext);
 
-  const handleSearch = (e) => {
-    setSearchText(e.target.value);
-    const filteredBrands = brands.filter((brand) =>
-      brand.brandId.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setBrands(filteredBrands);
-    if (e.target.value === "") {
-      fetchBrands();
-    }
-  }
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const columns = [
+    {
+      id: "id",
+      accessorKey: "adminId",
+      header: <div className="text-left">id</div>,
+    },
+    {
+      accessorKey: "name",
+      header: <div className="text-left">name</div>,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <Image
+            src={row.original?.imageUrl || ""}
+            width={32}
+            height={32}
+            alt="img"
+          />
+          {row.getValue("name") || "N/A"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: <div className="mx-auto">email</div>,
+      cell: ({ row }) => (
+        <div className="mx-auto text-center">{row.getValue("email")}</div>
+      ),
+    },
+    {
+      accessorKey: "role",
+      header: "role",
+      cell: ({ row }) => (
+        <div className="mx-auto text-center">{row.getValue("role")}</div>
+      ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: <div className="text-right">date</div>,
+      cell: ({ row }) => (
+        <div className="text-right">
+          {moment
+            .unix(row.getValue("createdAt")?.seconds || 0)
+            .format("DD/MM/YY")}
+        </div>
+      ),
+    },
+  ];
+
+  const table = useReactTable({
+    data: admins,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
+    },
+  });
 
   return (
-    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col justify-start items-start ">
-      <div className=" w-full flex flex-col items-start justify-center px-8 py-4 gap-1">
-        <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">Admins</h1>
-        <div className="flex justify-between  w-full max-xl:flex-col max-xl:gap-6">
-          <ul className="flex  gap-5 text-oohpoint-grey-300 max-md:flex-col cursor-pointer">
-            <li
-              className={`cursor-pointer ${
-                activeSection === "home" ? "text-oohpoint-tertiary-2" : ""
-              }`}
-              onClick={() => {
-                setActiveSection("home");
-              }}
-            >
-              Home
-            </li>
-            <li
-              className={`cursor-pointer ${
-                activeSection === "CreateAdmin"
-                  ? "text-oohpoint-tertiary-2"
-                  : ""
-              }`}
-              onClick={() => {
-                setActiveSection("CreateAdmin");
-              }}
-            >
-              Add Admin
-            </li>
-          </ul>
-          <div className="flex gap-5 max-md:flex-wrap max-md:gap-4 max-md:mt-3">
-            <input
-              type="text"
-              placeholder="Search"
-              className="px-4 py-1 rounded-lg"
-              value={searchtext}
-              onChange={(e) => handleSearch(e)}
-            />
-            <div>
-              <img src="/assets/refresh.png" alt="" srcset="" />
-            </div>
-          </div>
+    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col md:items-center md:flex-row md:justify-between gap-4 md:gap-6">
+        <div>
+          <h1 className="text-oohpoint-grey-500 font-bold text-4xl">Admins</h1>
+        </div>
+        <div className="flex items-center gap-4 md:justify-end justify-between">
+          <input
+            type="text"
+            placeholder="Search by Name"
+            className="px-4 py-2 rounded-lg w-48"
+            value={table.getColumn("name")?.getFilterValue() ?? ""}
+            onChange={(event) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
+            }
+          />
+          <CreateAdmin />
         </div>
       </div>
-      <div className=" w-full flex flex-col items-start justify-start px-8 gap-4">
-        {renderSection()}
-      </div>
+      {admins.length == 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-md h-24">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      ) : (
+        <div className="w-full overflow-x-auto rounded-lg">
+          <table className="bg-white rounded-lg shadow-sm w-full ">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header, i) => (
+                    <th
+                      key={header.id}
+                      className={
+                        "uppercase p-4 border-b font-medium text-neutral-700"
+                      }
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="divide-y">
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell, i) => (
+                    <td key={cell.id} className="px-4 py-8">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map((footerGroup) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </tfoot>
+          </table>
+        </div>
+      )}
+      {admins.length != 0 && (
+        <div className="flex justify-end items-center gap-2">
+          <button
+            className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </button>
+          <div className="flex items-center justify-center p-2 px-4 rounded-md text-white aspect-square bg-oohpoint-primary-2">
+            <strong>{table.getState().pagination.pageIndex + 1}</strong>
+          </div>
+          <button
+            className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

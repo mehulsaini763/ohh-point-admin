@@ -27,9 +27,9 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="bg-white flex flex-col shadow rounded-lg w-full overflow-x-auto">
       {title && <div className="p-4 text-3xl">{title}</div>}
-      <table className="table bg-white shadow rounded-lg w-full ">
+      <table>
         {/* Table Headings */}
         <thead>
           <tr className="flex items-center justify-between w-full p-4 border-b border-gray-200">
@@ -124,7 +124,7 @@ const DynamicTable = ({
       </table>
       {/* Pagination */}
       {pagination && (
-        <div className="flex justify-end p-4 space-x-2">
+        <div className="text-end space-x-2 space-y-2 w-full p-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
