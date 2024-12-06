@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import React from "react";
 
-const Modal = ({ open, close, children }) => {
+const Modal = ({ open, close, className, children }) => {
   return (
     open && (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex flex-col justify-center items-center z-10 p-8">
@@ -11,7 +11,7 @@ const Modal = ({ open, close, children }) => {
         >
           <X size={24} />
         </button>
-        {children}
+        <div className={className}>{children}</div>
       </div>
     )
   );

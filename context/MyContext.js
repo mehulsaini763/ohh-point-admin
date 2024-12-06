@@ -119,7 +119,6 @@ const MyProvider = ({ children }) => {
       }
 
       const campaignsData = await res.json();
-      console.log("########", campaignsData, "##############");
 
       setCampaigns(campaignsData);
     } catch (error) {

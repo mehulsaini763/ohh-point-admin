@@ -14,6 +14,7 @@ import Modal from "@/components/Modal";
 import moment from "moment";
 
 const CreateCampaign = ({ campaign }) => {
+  const { fetchCampaigns, brands } = useContext(MyContext);
   const [campaignName, setCampaignName] = useState("");
   const [moq, setMoq] = useState("");
   const [ta, setTa] = useState("");
@@ -39,10 +40,9 @@ const CreateCampaign = ({ campaign }) => {
       correctOption: null, // Index of the correct option
     },
   ]);
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState(brands);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { fetchCampaigns } = useContext(MyContext);
 
   const inputClassName =
     "mt-1 block w-full rounded-3xl py-1 px-4 bg-oohpoint-grey-200 font-light";
@@ -80,21 +80,6 @@ const CreateCampaign = ({ campaign }) => {
     updatedQuestions[questionIndex].options[optionIndex] = value;
     setQuizQuestions(updatedQuestions);
   };
-
-  const fetchClients = async () => {
-    const res = await fetch("/api/getBrands");
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch clients");
-    }
-
-    const data = await res.json();
-    setClients(data.reverse());
-  };
-
-  useEffect(() => {
-    fetchClients();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -219,367 +204,369 @@ const CreateCampaign = ({ campaign }) => {
           Create New Campaign
         </button>
       </div>
-      <Modal open={open} close={handleClose}>
-        <div className="w-full grid gap-8 grid-cols-4 p-4 pb-8 bg-white rounded-2xl overflow-y-auto p-8">
-          {/* Campaign Name */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Campaign Name
-            </label>
-            <input
-              className={inputClassName}
-              type="text"
-              value={campaignName}
-              onChange={(e) => setCampaignName(e.target.value)}
-              placeholder="Enter campaign name"
-            />
-          </div>
+      <Modal
+        className={
+          "w-full grid gap-8 grid-cols-4 p-4 pb-8 bg-white rounded-2xl overflow-y-auto md:p-8"
+        }
+        open={open}
+        close={handleClose}
+      >
+        {/* Campaign Name */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Campaign Name
+          </label>
+          <input
+            className={inputClassName}
+            type="text"
+            value={campaignName}
+            onChange={(e) => setCampaignName(e.target.value)}
+            placeholder="Enter campaign name"
+          />
+        </div>
 
-          {/* MOQ */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">MOQ</label>
-            <input
-              className={inputClassName}
-              type="number"
-              value={moq}
-              onChange={(e) => setMoq(e.target.value)}
-              placeholder="Enter MOQ"
-            />
-          </div>
+        {/* MOQ */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">MOQ</label>
+          <input
+            className={inputClassName}
+            type="number"
+            value={moq}
+            onChange={(e) => setMoq(e.target.value)}
+            placeholder="Enter MOQ"
+          />
+        </div>
 
-          {/* Target Audience */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Target Audience
-            </label>
-            <input
-              className={inputClassName}
-              type="text"
-              value={ta}
-              onChange={(e) => setTa(e.target.value)}
-              placeholder="Enter target audience"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  setTa("");
-                  setTargetAudience([...targetAudience, e.target.value]);
-                }
-              }}
-            />
-            <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
-              {targetAudience.length > 0 &&
-                targetAudience.map((ta, index) => (
-                  <span
-                    className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
-                    key={index}
-                    onClick={() =>
-                      setTargetAudience(
-                        targetAudience.filter((tg) => tg !== ta)
-                      )
-                    }
-                  >
-                    {ta}
-                  </span>
-                ))}
-            </div>
-          </div>
-
-          {/* Start Date */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Start Date
-            </label>
-            <input
-              type="date"
-              value={moment.unix(startDate.seconds).format("yyyy-MM-DD")}
-              onChange={(e) =>
-                setStartDate(Timestamp.fromDate(new Date(e.target.value)))
+        {/* Target Audience */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Target Audience
+          </label>
+          <input
+            className={inputClassName}
+            type="text"
+            value={ta}
+            onChange={(e) => setTa(e.target.value)}
+            placeholder="Enter target audience"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setTa("");
+                setTargetAudience([...targetAudience, e.target.value]);
               }
-              className={inputClassName}
-            />
-          </div>
-
-          {/* End Date */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              End Date
-            </label>
-            <input
-              type="date"
-              value={moment.unix(endDate.seconds).format("yyyy-MM-DD")}
-              onChange={(e) =>
-                setEndDate(Timestamp.fromDate(new Date(e.target.value)))
-              }
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Geographic Targeting */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Geographic Targeting
-            </label>
-            <input
-              className={inputClassName}
-              type="text"
-              value={geoTarget}
-              onChange={(e) => setGeoTarget(e.target.value)}
-              placeholder="Enter geographic targeting"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  setGeoTarget("");
-                  setGeoTargets([...geoTargets, e.target.value]);
-                }
-              }}
-            />
-            <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
-              {geoTargets.length > 0 &&
-                geoTargets.map((gt, index) => (
-                  <span
-                    className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
-                    key={index}
-                    onClick={() =>
-                      setGeoTargets(geoTargets.filter((tg) => tg !== gt))
-                    }
-                  >
-                    {gt}
-                  </span>
-                ))}
-            </div>
-          </div>
-
-          {/* QR Code Tags */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              QR Code Tags
-            </label>
-            <input
-              className={inputClassName}
-              type="text"
-              value={qrTag}
-              onChange={(e) => setQrTag(e.target.value)}
-              placeholder="Enter QR code tags"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  setQrTag("");
-                  setQrTags([...qrTags, e.target.value]);
-                }
-              }}
-            />
-            <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
-              {qrTags.length > 0 &&
-                qrTags.map((tag, index) => (
-                  <span
-                    className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
-                    key={index}
-                    onClick={() => setQrTags(qrTags.filter((tg) => tg !== tag))}
-                  >
-                    {tag}
-                  </span>
-                ))}
-            </div>
-          </div>
-
-          {/* Placement Channel Dropdown */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Placement Channel
-            </label>
-            <select
-              value={placementChannel}
-              onChange={(e) => setPlacementChannel(e.target.value)}
-              className={inputClassName}
-            >
-              <option value="" disabled>
-                Select a channel
-              </option>
-              <option value="mineralWater">Mineral Water</option>
-              <option value="carbonatedWater">Carbonated Water</option>
-              <option value="energyDrink">Energy Drink</option>
-              <option value="fruitJuices">Fruit Juices</option>
-            </select>
-          </div>
-
-          {/* Client Dropdown */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Client
-            </label>
-            <select
-              value={client}
-              onChange={(e) => setClient(e.target.value)}
-              className={inputClassName}
-            >
-              <option value="" disabled>
-                Select a client
-              </option>
-              {clients.map((cl) => (
-                <option value={cl.brandId} key={cl.brandId}>
-                  {cl.brandName} - {cl.brandId}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Campaign Budget */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Campaign Budget
-            </label>
-            <input
-              type="number"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              placeholder="Enter campaign budget"
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Campaign Objective */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Campaign Objective
-            </label>
-            <input
-              type="text"
-              value={objective}
-              onChange={(e) => setObjective(e.target.value)}
-              placeholder="Enter campaign objective"
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Reporting Frequency */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Reporting Frequency
-            </label>
-            <input
-              type="text"
-              value={reportFreq}
-              onChange={(e) => setReportFreq(e.target.value)}
-              placeholder="Enter reporting frequency"
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Ad Creative Image */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Ad Creative Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setAdCreativeImage(e.target.files[0])}
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Advertising Video */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Advertising Video
-            </label>
-            <input
-              type="file"
-              accept="video/*"
-              onChange={(e) => setAdVideo(e.target.files[0])}
-              className={inputClassName}
-            />
-          </div>
-
-          {/* Redirect Link */}
-          <div className="">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Redirect Link
-            </label>
-            <input
-              type="url"
-              value={redirectLink}
-              onChange={(e) => setRedirectLink(e.target.value)}
-              placeholder="https://"
-              className={inputClassName}
-            />
-          </div>
-
-          {/* MCQ Quiz Questions */}
-          <div className="col-span-2">
-            <label className="block text-oohpoint-primary-2 text-lg">
-              Quiz Questions
-            </label>
-            {quizQuestions.map((question, index) => (
-              <div key={index} className="mb-4">
-                <input
-                  type="text"
-                  value={question.question}
-                  onChange={(e) => handleQuestionChange(index, e.target.value)}
-                  placeholder="Enter question"
-                  className={inputClassName}
-                />
-                <div className="mt-2">
-                  {question.options.map((option, optIndex) => (
-                    <div key={optIndex} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={option}
-                        onChange={(e) =>
-                          handleOptionChange(index, optIndex, e.target.value)
-                        }
-                        placeholder={`Option ${optIndex + 1}`}
-                        className={`mr-2 ${inputClassName}`}
-                      />
-                      <label className="ml-2">
-                        <input
-                          type="radio"
-                          name={`question-${index}`}
-                          checked={question.correctOption === optIndex}
-                          onChange={() => {
-                            const updatedQuestions = [...quizQuestions];
-                            updatedQuestions[index].correctOption = optIndex;
-                            setQuizQuestions(updatedQuestions);
-                          }}
-                        />
-                        Correct
-                      </label>
-                      <button
-                        className="ml-2 p-2 py-1 bg-red-500 text-white rounded-lg"
-                        onClick={() => removeOption(index, optIndex)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    className="mt-2 p-2 py-1 bg-blue-500 text-white rounded-lg"
-                    onClick={() => addOption(index)}
-                  >
-                    Add Option
-                  </button>
-                </div>
-                <button
-                  className="mt-2 p-2 py-1 bg-red-500 text-white rounded-lg"
-                  onClick={() => removeQuestion(index)}
+            }}
+          />
+          <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
+            {targetAudience.length > 0 &&
+              targetAudience.map((ta, index) => (
+                <span
+                  className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
+                  key={index}
+                  onClick={() =>
+                    setTargetAudience(targetAudience.filter((tg) => tg !== ta))
+                  }
                 >
-                  Remove Question
+                  {ta}
+                </span>
+              ))}
+          </div>
+        </div>
+
+        {/* Start Date */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Start Date
+          </label>
+          <input
+            type="date"
+            value={moment.unix(startDate.seconds).format("yyyy-MM-DD")}
+            onChange={(e) =>
+              setStartDate(Timestamp.fromDate(new Date(e.target.value)))
+            }
+            className={inputClassName}
+          />
+        </div>
+
+        {/* End Date */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            End Date
+          </label>
+          <input
+            type="date"
+            value={moment.unix(endDate.seconds).format("yyyy-MM-DD")}
+            onChange={(e) =>
+              setEndDate(Timestamp.fromDate(new Date(e.target.value)))
+            }
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Geographic Targeting */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Geographic Targeting
+          </label>
+          <input
+            className={inputClassName}
+            type="text"
+            value={geoTarget}
+            onChange={(e) => setGeoTarget(e.target.value)}
+            placeholder="Enter geographic targeting"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setGeoTarget("");
+                setGeoTargets([...geoTargets, e.target.value]);
+              }
+            }}
+          />
+          <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
+            {geoTargets.length > 0 &&
+              geoTargets.map((gt, index) => (
+                <span
+                  className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
+                  key={index}
+                  onClick={() =>
+                    setGeoTargets(geoTargets.filter((tg) => tg !== gt))
+                  }
+                >
+                  {gt}
+                </span>
+              ))}
+          </div>
+        </div>
+
+        {/* QR Code Tags */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            QR Code Tags
+          </label>
+          <input
+            className={inputClassName}
+            type="text"
+            value={qrTag}
+            onChange={(e) => setQrTag(e.target.value)}
+            placeholder="Enter QR code tags"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setQrTag("");
+                setQrTags([...qrTags, e.target.value]);
+              }
+            }}
+          />
+          <div className="mt-1 flex flex-wrap w-full mb-2 border border-gray-300 justify-start items-center rounded-md ">
+            {qrTags.length > 0 &&
+              qrTags.map((tag, index) => (
+                <span
+                  className="cursor-pointer border bg-white py-1 px-4 m-2 border-primary rounded-full"
+                  key={index}
+                  onClick={() => setQrTags(qrTags.filter((tg) => tg !== tag))}
+                >
+                  {tag}
+                </span>
+              ))}
+          </div>
+        </div>
+
+        {/* Placement Channel Dropdown */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Placement Channel
+          </label>
+          <select
+            value={placementChannel}
+            onChange={(e) => setPlacementChannel(e.target.value)}
+            className={inputClassName}
+          >
+            <option value="" disabled>
+              Select a channel
+            </option>
+            <option value="mineralWater">Mineral Water</option>
+            <option value="carbonatedWater">Carbonated Water</option>
+            <option value="energyDrink">Energy Drink</option>
+            <option value="fruitJuices">Fruit Juices</option>
+          </select>
+        </div>
+
+        {/* Client Dropdown */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Client
+          </label>
+          <select
+            value={client}
+            onChange={(e) => setClient(e.target.value)}
+            className={inputClassName}
+          >
+            <option value="" disabled>
+              Select a client
+            </option>
+            {clients.map((cl) => (
+              <option value={cl.brandId} key={cl.brandId}>
+                {cl.brandName} - {cl.brandId}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Campaign Budget */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Campaign Budget
+          </label>
+          <input
+            type="number"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            placeholder="Enter campaign budget"
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Campaign Objective */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Campaign Objective
+          </label>
+          <input
+            type="text"
+            value={objective}
+            onChange={(e) => setObjective(e.target.value)}
+            placeholder="Enter campaign objective"
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Reporting Frequency */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Reporting Frequency
+          </label>
+          <input
+            type="text"
+            value={reportFreq}
+            onChange={(e) => setReportFreq(e.target.value)}
+            placeholder="Enter reporting frequency"
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Ad Creative Image */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Ad Creative Image
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAdCreativeImage(e.target.files[0])}
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Advertising Video */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Advertising Video
+          </label>
+          <input
+            type="file"
+            accept="video/*"
+            onChange={(e) => setAdVideo(e.target.files[0])}
+            className={inputClassName}
+          />
+        </div>
+
+        {/* Redirect Link */}
+        <div className="">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Redirect Link
+          </label>
+          <input
+            type="url"
+            value={redirectLink}
+            onChange={(e) => setRedirectLink(e.target.value)}
+            placeholder="https://"
+            className={inputClassName}
+          />
+        </div>
+
+        {/* MCQ Quiz Questions */}
+        <div className="col-span-2">
+          <label className="block text-oohpoint-primary-2 text-lg">
+            Quiz Questions
+          </label>
+          {quizQuestions.map((question, index) => (
+            <div key={index} className="mb-4">
+              <input
+                type="text"
+                value={question.question}
+                onChange={(e) => handleQuestionChange(index, e.target.value)}
+                placeholder="Enter question"
+                className={inputClassName}
+              />
+              <div className="mt-2">
+                {question.options.map((option, optIndex) => (
+                  <div key={optIndex} className="flex items-center mb-2">
+                    <input
+                      type="text"
+                      value={option}
+                      onChange={(e) =>
+                        handleOptionChange(index, optIndex, e.target.value)
+                      }
+                      placeholder={`Option ${optIndex + 1}`}
+                      className={`mr-2 ${inputClassName}`}
+                    />
+                    <label className="ml-2">
+                      <input
+                        type="radio"
+                        name={`question-${index}`}
+                        checked={question.correctOption === optIndex}
+                        onChange={() => {
+                          const updatedQuestions = [...quizQuestions];
+                          updatedQuestions[index].correctOption = optIndex;
+                          setQuizQuestions(updatedQuestions);
+                        }}
+                      />
+                      Correct
+                    </label>
+                    <button
+                      className="ml-2 p-2 py-1 bg-red-500 text-white rounded-lg"
+                      onClick={() => removeOption(index, optIndex)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  className="mt-2 p-2 py-1 bg-blue-500 text-white rounded-lg"
+                  onClick={() => addOption(index)}
+                >
+                  Add Option
                 </button>
               </div>
-            ))}
-            <button
-              className="mt-2 p-2 py-1 bg-green-500 text-white rounded-lg"
-              onClick={addQuestion}
-            >
-              Add Question
-            </button>
-          </div>
-          <div className="flex justify-end flex-col gap-3">
-            <button
-              className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
-              disabled={loading}
-              onClick={handleSubmit}
-            >
-              {loading ? "Creating..." : "Create Campaign"}
-            </button>
-          </div>
+              <button
+                className="mt-2 p-2 py-1 bg-red-500 text-white rounded-lg"
+                onClick={() => removeQuestion(index)}
+              >
+                Remove Question
+              </button>
+            </div>
+          ))}
+          <button
+            className="mt-2 p-2 py-1 bg-green-500 text-white rounded-lg"
+            onClick={addQuestion}
+          >
+            Add Question
+          </button>
+        </div>
+        <div className="flex justify-end flex-col gap-3">
+          <button
+            className="bg-oohpoint-primary-2 text-white font-semibold px-5 py-2 rounded-lg mt-2 hover:scale-90 transition-all"
+            disabled={loading}
+            onClick={handleSubmit}
+          >
+            {loading ? "Creating..." : "Create Campaign"}
+          </button>
         </div>
       </Modal>
     </>

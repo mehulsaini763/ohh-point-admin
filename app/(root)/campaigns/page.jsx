@@ -9,14 +9,16 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Loader2 } from "lucide-react";
+import { Loader2, SortAsc, SortDesc } from "lucide-react";
 import EditCampaign from "./_components/EditCampaign";
 import CampaignDetails from "./_components/CampaignDetails";
+import DeleteModal from "./_components/DeleteModal";
 
 const Campaigns = () => {
-  const { campaigns } = useContext(MyContext);
+  const { campaigns, fetchCampaigns } = useContext(MyContext);
 
   const getStatus = (startDate, endDate) => {
     const currentDate = new Date().setHours(0, 0, 0, 0); // Current date without time
@@ -46,8 +48,9 @@ const Campaigns = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 4,
+    pageSize: 10,
   });
+  const [sorting, setSorting] = useState([{ id: "createdAt", desc: true }]); // can set initial sorting state here
 
   const columns = [
     { accessorKey: "id", header: <div className="text-left">campaign id</div> },
@@ -72,6 +75,15 @@ const Campaigns = () => {
       cell: ({ row }) => (
         <div className="text-center">
           {row.getValue("ipAddress")?.length || 0}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created at",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {moment.unix(row.getValue("createdAt")?.seconds).format("DD/MM/YY")}
         </div>
       ),
     },
@@ -107,7 +119,10 @@ const Campaigns = () => {
       header: "",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2 justify-center items-center">
-          <EditCampaign isEdit={true} campaign={row.original} />
+          <div className="flex gap-4">
+            <EditCampaign campaign={row.original} />
+            <DeleteModal campaign={row.original} />
+          </div>
           <CampaignDetails campaign={row.original} />
         </div>
       ),
@@ -121,14 +136,27 @@ const Campaigns = () => {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       pagination,
+      sorting,
     },
   });
 
+  const toggleCreatedAtSorting = () =>
+    table.setSorting((state) => {
+      const currentSorting = state.find((sort) => sort.id === "createdAt");
+      if (currentSorting) {
+        return currentSorting.desc
+          ? [{ id: "createdAt", desc: false }]
+          : [{ id: "createdAt", desc: true }]; // Sort ascending
+      } else return []; // Clear sorting
+    });
+
   return (
-    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-6 p-6">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">
             Campaigns
@@ -137,6 +165,24 @@ const Campaigns = () => {
             All you need to know about campaigns!
           </p>
         </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          className="bg-white rounded-md px-4 py-2 border hover:bg-neutral-100"
+          onClick={toggleCreatedAtSorting}
+        >
+          {table.getState().sorting.find(({ id }) => id == "createdAt")
+            ?.desc ? (
+            <div className="flex gap-2 items-center">
+              Sort Ascending <SortAsc size={18} />
+            </div>
+          ) : (
+            <div className="flex gap-2 items-center">
+              Sort Descending <SortDesc size={18} />
+            </div>
+          )}
+        </button>
         <CreateCampaign />
       </div>
       {campaigns.length == 0 ? (

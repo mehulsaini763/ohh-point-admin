@@ -96,14 +96,11 @@ const SprukoMixChart = () => {
   );
 
   return (
-    <div className="w-2/3 flex flex-col gap-2">
-      <p className="text-oohpoint-primary-2 text-2xl">
+    <div className="md:col-span-3 md:row-span-2 gap-2 bg-white shadow rounded-lg">
+      <p className="text-oohpoint-primary-2 text-xl p-4 border-b">
         Campaign Status Overview
       </p>
-      <ResponsiveContainer
-        className="bg-white text-xs shadow rounded-lg"
-        aspect={3}
-      >
+      <ResponsiveContainer aspect={3}>
         {/* Custom legend */}
         <div className="pt-2 pb-4">{renderLegend()}</div>
         <ComposedChart data={data} margin={{ right: 40 }}>
