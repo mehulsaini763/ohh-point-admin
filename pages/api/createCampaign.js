@@ -1,5 +1,5 @@
 import { db, storage } from "@/firebase"; // Adjust based on your Firebase config
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import {
   uploadBytes,
@@ -54,7 +54,6 @@ export default async function handler(req, res) {
       //  || // Ensure quiz questions are included
       // !advertisingVideo ||
       // !adCreative
-
     ) {
       return res.status(400).json({
         message: "Please provide all the required fields.",
@@ -69,15 +68,13 @@ export default async function handler(req, res) {
       let adCreativeUrl = null;
       let advertisingVideoUrl = null;
 
-  
-
       // Create the campaign document in Firestore
       await setDoc(doc(db, "campaigns", cid), {
         campaignName,
         moq,
         targetAudience,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
+        startDate,
+        endDate,
         geographicTargeting,
         qrCodeTags,
         placementChannel,
@@ -91,7 +88,7 @@ export default async function handler(req, res) {
         quizQuestions, // Add quiz questions to the document
         campaignId,
         cid,
-        createdAt: new Date(),
+        createdAt: serverTimestamp(),
       });
 
       res.status(200).json({

@@ -172,8 +172,38 @@ const CreateCampaign = ({ campaign }) => {
     } finally {
       fetchCampaigns();
       setLoading(false);
-      setOpen(false);
+      handleClose();
     }
+  };
+
+  const handleClose = () => {
+    setCampaignName("");
+    setMoq("");
+    setTa("");
+    setTargetAudience([]);
+    setStartDate("");
+    setEndDate("");
+    setGeoTarget("");
+    setGeoTargets([]);
+    setQrTag("");
+    setQrTags([]);
+    setPlacementChannel("");
+    setClient("");
+    setBudget("");
+    setObjective("");
+    setReportFreq("");
+    setAdCreativeImage(null);
+    setAdVideo(null);
+    setRedirectLink("");
+    setQuizQuestions([
+      {
+        question: "",
+        options: [""],
+        correctOption: null, // Index of the correct option
+      },
+    ]);
+    setClients([]);
+    setOpen(false);
   };
 
   return (
@@ -189,7 +219,7 @@ const CreateCampaign = ({ campaign }) => {
           Create New Campaign
         </button>
       </div>
-      <Modal open={open} close={() => setOpen(false)}>
+      <Modal open={open} close={handleClose}>
         <div className="w-full grid gap-8 grid-cols-4 p-4 pb-8 bg-white rounded-2xl overflow-y-auto p-8">
           {/* Campaign Name */}
           <div className="">
