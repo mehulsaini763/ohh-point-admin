@@ -11,36 +11,35 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation"; // For accessing query params
 import { Timestamp } from "firebase/firestore";
 import Modal from "@/components/Modal";
+import moment from "moment";
 
-const EditCampaign = ({ isEdit, campaign }) => {
-  const [campaignName, setCampaignName] = useState("");
-  const [moq, setMoq] = useState("");
+const EditCampaign = ({ campaign }) => {
+  const [campaignName, setCampaignName] = useState(campaign.campaignName);
+  const [moq, setMoq] = useState(campaign.moq);
   const [ta, setTa] = useState("");
-  const [targetAudience, setTargetAudience] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [targetAudience, setTargetAudience] = useState(campaign.targetAudience);
+  const [startDate, setStartDate] = useState(
+    moment.unix(campaign.startDate.seconds).format("yyyy-MM-DD")
+  );
+  const [endDate, setEndDate] = useState(
+    moment.unix(campaign.endDate.seconds).format("yyyy-MM-DD")
+  );
   const [geoTarget, setGeoTarget] = useState("");
-  const [geoTargets, setGeoTargets] = useState([]);
+  const [geoTargets, setGeoTargets] = useState(campaign.geographicTargeting);
   const [qrTag, setQrTag] = useState("");
-  const [qrTags, setQrTags] = useState([]);
+  const [qrTags, setQrTags] = useState(campaign.qrCodeTags);
   const [placementChannel, setPlacementChannel] = useState("");
-  const [client, setClient] = useState("");
-  const [budget, setBudget] = useState("");
-  const [objective, setObjective] = useState("");
-  const [reportFreq, setReportFreq] = useState("");
+  const [client, setClient] = useState(campaign.client);
+  const [budget, setBudget] = useState(campaign.campaignBudget);
+  const [objective, setObjective] = useState(campaign.campaignObjectives);
+  const [reportFreq, setReportFreq] = useState(campaign.reportingFrequency);
   const [adCreativeImage, setAdCreativeImage] = useState(null);
   const [adVideo, setAdVideo] = useState(null);
-  const [redirectLink, setRedirectLink] = useState("");
-  const [quizQuestions, setQuizQuestions] = useState([
-    {
-      question: "",
-      options: [""],
-      correctOption: null, // Index of the correct option
-    },
-  ]);
+  const [redirectLink, setRedirectLink] = useState(campaign.redirectLink);
+  const [quizQuestions, setQuizQuestions] = useState(campaign.quizQuestions);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { fetchCampaigns, setIsEditCampaign } = useContext(MyContext);
+  const { fetchCampaigns } = useContext(MyContext);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -96,35 +95,6 @@ const EditCampaign = ({ isEdit, campaign }) => {
   useEffect(() => {
     fetchClients();
   }, []);
-
-  useEffect(() => {
-    if (isEdit && campaign) {
-      setCampaignName(campaign.campaignName);
-      setMoq(campaign.moq);
-      setTargetAudience(campaign.targetAudience);
-
-      // Convert Firestore Timestamp to 'YYYY-MM-DD' format for input
-      const formattedStartDate = new Date(campaign.startDate.seconds * 1000)
-        .toISOString()
-        .split("T")[0];
-      const formattedEndDate = new Date(campaign.endDate?.seconds * 1000)
-        .toISOString()
-        .split("T")[0];
-
-      setStartDate(formattedStartDate);
-      setEndDate(formattedEndDate);
-
-      setGeoTargets(campaign.geographicTargeting);
-      setQrTags(campaign.qrCodeTags);
-      setPlacementChannel(campaign.placementChannel);
-      setClient(campaign.client);
-      setBudget(campaign.campaignBudget);
-      setObjective(campaign.campaignObjectives);
-      setReportFreq(campaign.reportingFrequency);
-      setRedirectLink(campaign.redirectLink);
-      setQuizQuestions(campaign.quizQuestions);
-    }
-  }, [isEdit, campaign]);
 
   const formatToFirestoreTimestamp = (date) => {
     if (date && date.toDate) {
@@ -207,45 +177,21 @@ const EditCampaign = ({ isEdit, campaign }) => {
     };
 
     try {
-      let response;
-      if (isEdit) {
-        // Update existing campaign
-        response = await fetch(`/api/updateCampaign/`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ cid: campaign.cid, ...campaignData }),
-        });
-      } else {
-        // Create new campaign
-        response = await fetch("/api/EditCampaign", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(campaignData),
-        });
-      }
-
-      const result = await response.json();
-      if (response.ok) {
-        toast.success(
-          isEdit
-            ? "Campaign updated successfully"
-            : "Campaign created successfully"
-        );
-        // router.push("/campaigns");
-      } else {
-        toast.error(result.message || "Failed to save campaign");
-      }
+      await fetch(`/api/updateCampaign/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cid: campaign.cid, ...campaignData }),
+      });
+      toast.success("Campaign updated successfully");
     } catch (error) {
-      console.error("Error creating/updating campaign:", error);
+      console.error(error.message, "Error creating/updating campaign:", error);
       toast.error("An error occurred while saving the campaign.");
     } finally {
-      setLoading(false);
       fetchCampaigns();
-      setIsEditCampaign(false);
+      setLoading(false);
+      setOpen(false);
     }
   };
 
@@ -617,13 +563,7 @@ const EditCampaign = ({ isEdit, campaign }) => {
               disabled={loading}
               onClick={handleSubmit}
             >
-              {loading
-                ? isEdit
-                  ? "Updating..."
-                  : "Creating..."
-                : isEdit
-                ? "Update Campaign"
-                : "Create Campaign"}
+              {loading ? "Updating..." : "Update Campaign"}{" "}
             </button>
           </div>
         </div>
