@@ -18,9 +18,10 @@ import CampaignDetails from "./_components/CampaignDetails";
 import DeleteModal from "./_components/DeleteModal";
 import { Popover } from "@mui/material";
 import PauseModal from "./_components/PauseModal";
+import QRCodeGenerator from "@/components/QRCode";
 
 const Campaigns = () => {
-  const { campaigns, fetchCampaigns } = useContext(MyContext);
+  const { campaigns, user } = useContext(MyContext);
 
   const getStatus = (startDate, endDate) => {
     const currentDate = new Date().setHours(0, 0, 0, 0); // Current date without time
@@ -120,6 +121,15 @@ const Campaigns = () => {
             getStatus(row.getValue("startDate"), row.getValue("endDate"))
           )}
         </div>
+      ),
+    },
+    {
+      accessorKey: "qr-code",
+      header: "QR CODE",
+      cell: ({ row }) => (
+        <QRCodeGenerator
+          value={`https://user-ooh-point.vercel.app/campaign/${row.original.campaignId}-${user.vendorId}`}
+        />
       ),
     },
     {
