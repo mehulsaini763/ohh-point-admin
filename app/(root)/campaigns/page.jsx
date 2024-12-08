@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { Loader2, SortAsc, SortDesc } from "lucide-react";
 import EditCampaign from "./_components/EditCampaign";
-import CampaignDetails from "./_components/CampaignDetails";
+import CampaignDetails from "@/components/CampaignDetails";
 import DeleteModal from "./_components/DeleteModal";
 import { Popover } from "@mui/material";
 import PauseModal from "./_components/PauseModal";

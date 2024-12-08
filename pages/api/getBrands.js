@@ -1,12 +1,12 @@
 import { db } from "@/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const brandsCollection = collection(db, "brands");
-
-      const brandSnapshot = await getDocs(brandsCollection);
+      const brandQuery = query(brandsCollection, orderBy("brandId", "desc"));
+      const brandSnapshot = await getDocs(brandQuery);
       const brands = [];
 
       brandSnapshot.forEach((doc) => {

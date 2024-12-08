@@ -39,7 +39,7 @@ const BrandDetails = ({ brand, campaigns }) => {
         </div>
         <BrandCard brand={brand} />
         <BrandCard2 brand={brand} campaigns={campaigns} />
-        {campaigns && <BrandCard3 campaigns={campaigns} />}
+        {campaigns.length != 0 && <BrandCard3 campaigns={campaigns} />}
       </Modal>
     </>
   );

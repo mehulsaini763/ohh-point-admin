@@ -15,13 +15,11 @@ const Header = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user);
       if (!user) {
         // User is already logged in, redirect to dashboard
         toast.error("Log in first");
         router.push("/sign-in"); // Adjust the route as per your application
       }
-      console.log(user);
     });
 
     // Clean up subscription on unmount

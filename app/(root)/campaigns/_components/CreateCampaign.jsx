@@ -43,8 +43,6 @@ const CreateCampaign = ({ campaign }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  console.log(brands);
-
   const inputClassName =
     "mt-1 block w-full rounded-3xl py-1 px-4 bg-oohpoint-grey-200 font-light";
 

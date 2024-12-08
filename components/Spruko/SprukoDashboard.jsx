@@ -8,7 +8,7 @@ import { MyContext } from "@/context/MyContext";
 import SprukoMixChart from "./SprukoMixChart";
 import dynamic from "next/dynamic";
 import QRCodeGenerator from "../QRCode";
-import CampaignDetails from "@/app/(root)/campaigns/_components/CampaignDetails";
+import CampaignDetails from "@/components/CampaignDetails";
 import moment from "moment";
 import {
   flexRender,

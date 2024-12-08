@@ -67,7 +67,12 @@ const Brands = () => {
       header: "",
       cell: ({ row }) => (
         <div className="flex justify-center items-center">
-          <BrandDetails brand={row.original} campaigns={campaigns} />
+          <BrandDetails
+            brand={row.original}
+            campaigns={campaigns.filter(
+              (campaign) => campaign.client === row.original.id
+            )}
+          />
         </div>
       ),
     },

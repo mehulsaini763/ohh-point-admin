@@ -28,7 +28,6 @@ const MyProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is already logged in
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user);
       if (!user) {
         toast.error("Log in first");
         router.push("/sign-in"); // Adjust the route as per your application
@@ -50,9 +49,9 @@ const MyProvider = ({ children }) => {
       }
 
       const userData = await res.json();
-      console.log(userData);
+
       const data = userData.find((user) => user.uid === uid);
-      console.log(data);
+
       setUser(data);
       fetchCampaigns();
       fetchVendors();
@@ -136,7 +135,7 @@ const MyProvider = ({ children }) => {
 
       const blogsData = await res.json();
 
-      setBlogs(blogsData.reverse());
+      setBlogs(blogsData);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
