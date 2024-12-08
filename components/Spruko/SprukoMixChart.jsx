@@ -44,7 +44,6 @@ const SprukoMixChart = () => {
       console.log("No campaigns data available");
       return;
     }
-    console.log("Found Campaigns");
 
     const monthlyData = Array.from({ length: 12 }, (_, i) => ({
       month: new Date(0, i).toLocaleString("default", { month: "short" }), // Get month names (Jan, Feb, ...)
@@ -68,7 +67,6 @@ const SprukoMixChart = () => {
       }
     });
 
-    console.log("Monthly Data:", monthlyData);
     setData(monthlyData);
   }, [campaigns]);
 

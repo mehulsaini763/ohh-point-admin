@@ -30,10 +30,9 @@ const MapLocation = dynamic(
 const SprukoDashboard = () => {
   const { campaigns, user, vendors, brands, users } = useContext(MyContext);
   const [locations, setLocations] = useState([]);
-  console.log(campaigns);
 
-  function convertTimestampToDate(timestamp) {
-    return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+  function convertTimestampToDate(tmstmp) {
+    return new Date((tmstmp?.seconds || 1) * 1000 + (tmstmp?.nanoseconds || 1) / 1000000);
   }
 
   function getWeekdayName(date) {
