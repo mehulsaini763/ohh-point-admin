@@ -16,9 +16,9 @@ export default function RootLayout({ children }) {
         <MyProvider>
           <Toaster />
           {/* {children} */}
-          <div className="flex justify-between items-center w-full h-screen bg-gradient-to-b from-white to-oohpoint-grey-200">
+          <div className="flex justify-between items-center w-full h-screen bg-gradient-to-b from-white to-oohpoint-grey-200 overflow-hidden">
             <Sidebar />
-            <div className="flex flex-col justify-start items-center md:w-[calc(100%-4rem)] w-full bg-oohpoint-grey-200 h-screen overflow-y-scroll">
+            <div className="flex flex-col justify-start items-center w-full bg-oohpoint-grey-200 h-screen overflow-y-auto">
               <Header />
               {children}
             </div>

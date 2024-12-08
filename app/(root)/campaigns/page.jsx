@@ -51,7 +51,7 @@ const Campaigns = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 5,
   });
   const [sorting, setSorting] = useState([{ id: "createdAt", desc: true }]); // can set initial sorting state here
 
@@ -200,9 +200,9 @@ const Campaigns = () => {
     });
 
   return (
-    <div className="bg-oohpoint-grey-200 w-full h-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
+    <div className="bg-oohpoint-grey-200 w-full h-full gap-4 md:gap-8 p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
+        <div>
           <h1 className=" text-oohpoint-grey-500 font-bold text-4xl">
             Campaigns
           </h1>
@@ -211,7 +211,7 @@ const Campaigns = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-between gap-6">
+      <div className="flex items-center justify-between gap-6 my-4">
         <button
           type="button"
           className="bg-white rounded-md px-4 py-2 border hover:bg-neutral-100"
@@ -230,88 +230,89 @@ const Campaigns = () => {
         </button>
         <CreateCampaign />
       </div>
-      {campaigns.length == 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-md h-24">
-          <Loader2 className="h-6 w-6 animate-spin" />
-        </div>
-      ) : (
-        <div className="w-full overflow-x-auto rounded-lg">
-          <table className="bg-white rounded-lg shadow-sm w-full ">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header, i) => (
-                    <th
-                      key={header.id}
-                      className={
-                        "uppercase p-4 border-b font-medium text-neutral-700"
-                      }
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y">
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell, i) => (
-                    <td key={cell.id} className="px-4 py-8">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              {table.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </tfoot>
-          </table>
-        </div>
-      )}
-      {campaigns.length != 0 && (
-        <div className="flex justify-end items-center gap-2">
-          <button
-            className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </button>
-          <div className="flex items-center justify-center p-2 px-4 rounded-md text-white aspect-square bg-oohpoint-primary-2">
-            <strong>{table.getState().pagination.pageIndex + 1}</strong>
+      <div className="space-y-4 overflow-x-auto">
+        {campaigns.length == 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-md h-48 bg-white">
+            <Loader2 className="h-6 w-6 animate-spin" />
           </div>
-          <button
-            className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </button>
-        </div>
-      )}
+        ) : (
+          <>
+            <table className="bg-white rounded-lg shadow-sm w-full h-full">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header, i) => (
+                      <th
+                        key={header.id}
+                        className={
+                          "uppercase p-4 border-b font-medium text-neutral-700"
+                        }
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody className="divide-y">
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell, i) => (
+                      <td key={cell.id} className="px-4 py-8">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                {table.getFooterGroups().map((footerGroup) => (
+                  <tr key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </tfoot>
+            </table>
+            <div className="flex justify-end items-center gap-2">
+              <button
+                className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                Previous
+              </button>
+              <div className="flex items-center justify-center p-2 px-4 rounded-md text-white aspect-square bg-oohpoint-primary-2">
+                <strong>{table.getState().pagination.pageIndex + 1}</strong>
+              </div>
+              <button
+                className="rounded-md py-2 px-4 bg-oohpoint-primary-2 hover:bg-oohpoint-primary-3 text-white disabled:bg-neutral-300 disabled:text-neutral-500"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      <div className="py-0.5" />
     </div>
   );
 };
